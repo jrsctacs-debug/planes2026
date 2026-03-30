@@ -13,6 +13,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
+    console.log("🚀 DASHBOARD VERSION: 2.3.0 - STABLE INFRA SYNC");
+
     const firebaseConfig = {
       apiKey: "AIzaSyCjovj67SaTlX1eNmmn0M5C9TJCclyE_Pg",
       authDomain: "planes-infra-2026.firebaseapp.com",
@@ -144,6 +146,33 @@
 
     .tab-panel.active {
       display: flex
+    }
+
+    .inline-edit {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 4px;
+      font-size: 11px;
+      font-family: inherit;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .inline-edit:hover,
+    .inline-edit:focus {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+      outline: none;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    #infraTable input.inline-edit {
+      font-weight: normal;
+    }
+
+    #infraTable select.inline-edit {
+      cursor: pointer;
     }
 
     .fbar {
@@ -1497,9 +1526,10 @@
       <button class="tab-btn active" onclick="switchTab(0)">📋 Plan Operativo 2026</button>
       <button class="tab-btn" onclick="switchTab(1)">💡 Plan de Proyectos TI</button>
       <button class="tab-btn" onclick="switchTab(2)">📝 Plan de Auditorías</button>
-      <button class="tab-btn" id="tabAdminBtn" onclick="switchTab(3)">⚙️ Configuración</button>
+      <button class="tab-btn" onclick="switchTab(3)">🏗️ Seguimiento Infraestructura</button>
+      <button class="tab-btn" id="tabAdminBtn" onclick="switchTab(4)">⚙️ Configuración</button>
       <button class="tab-btn" id="tabUsersBtn" onclick="switchTab(5)" style="display:none;">🛡️ Usuarios</button>
-      <button class="tab-btn" id="tabMsjBtn" onclick="switchTab(4)"
+      <button class="tab-btn" id="tabMsjBtn" onclick="switchTab(6)"
         style="display:none; color: #00a884; font-weight: bold;">💬 Mensajes</button>
     </div>
     <div id="toast"
@@ -1633,41 +1663,54 @@
         </div>
       </div>
 
-      <div class="tab-panel" id="tab3">
+      <div class="tab-panel" id="tab4">
         <div style="background:white; border-radius:12px; padding:24px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); margin-top:20px;">
           <div>
             <h2 style="color:#0f172a; margin:0 0 4px 0;">Sincronización de Datos</h2>
             <div style="color:#64748b; font-size:14px; margin-bottom: 20px;">Carga tu archivo Excel para actualizar automáticamente la información del dashboard.</div>
             
-            <div style="padding: 24px; border: 2px dashed #94a3b8; border-radius: 8px; text-align: center; background: #f8fafc; margin-bottom: 16px;">
-              <h3 style="color:#475569; margin-bottom: 15px; font-size: 15px;">MATRIZ MANTENIMIENTOS Y PARCHADOS 2026 V1.XLSX</h3>
-              <input type="file" id="fileInput" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Plan Operativo', this)">
-              <button class="msav" onclick="document.getElementById('fileInput').value = null; document.getElementById('fileInput').click()" style="font-size:14px; padding: 10px 20px; background:#64748b;">
-                📂 Seleccionar Excel (Plan Operativo)
-              </button>
-            </div>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:16px;">
+              <!-- Caja 1 -->
+              <div style="padding: 20px; border: 2px dashed #94a3b8; border-radius: 8px; text-align: center; background: #f8fafc;">
+                <h3 style="color:#475569; margin-bottom: 12px; font-size: 14px;">Mantenimientos y Parchados (Operativo)</h3>
+                <input type="file" id="fileInput" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Plan Operativo', this)">
+                <button class="msav" onclick="document.getElementById('fileInput').value = null; document.getElementById('fileInput').click()" style="font-size:13px; padding: 8px 16px; background:#64748b; width:100%;">
+                  📂 Cargar Plan Operativo
+                </button>
+              </div>
 
-            <div style="padding: 24px; border: 2px dashed #0a1f8f; border-radius: 8px; text-align: center; background: #eff6ff;">
-              <h3 style="color:#1e3a8a; margin-bottom: 15px; font-size: 15px;">MATRIZ PROYECTOS SERVICIOSTI 2026 V1.XLSX</h3>
-              <input type="file" id="fileInputTI" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Servicios TI', this)">
-              <button class="msav" onclick="document.getElementById('fileInputTI').value = null; document.getElementById('fileInputTI').click()" style="font-size:14px; padding: 10px 20px; background:#0a1f8f;">
-                📋 Seleccionar Excel (Servicios TI)
-              </button>
-            </div>
+              <!-- Caja 2 -->
+              <div style="padding: 20px; border: 2px dashed #0a1f8f; border-radius: 8px; text-align: center; background: #eff6ff;">
+                <h3 style="color:#1e3a8a; margin-bottom: 12px; font-size: 14px;">Proyectos Servicios TI</h3>
+                <input type="file" id="fileInputTI" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Servicios TI', this)">
+                <button class="msav" onclick="document.getElementById('fileInputTI').value = null; document.getElementById('fileInputTI').click()" style="font-size:13px; padding: 8px 16px; background:#0a1f8f; width:100%;">
+                  📋 Cargar Servicios TI
+                </button>
+              </div>
 
-            <div style="padding: 24px; border: 2px dashed #ea580c; border-radius: 8px; text-align: center; background: #fff7ed;">
-              <h3 style="color:#c2410c; margin-bottom: 15px; font-size: 15px;">INDICADORES INFRAESTRUCTURA.XLSX</h3>
-              <input type="file" id="fileInputAudit" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Plan de Auditorias', this)">
-              <button class="msav" onclick="document.getElementById('fileInputAudit').value = null; document.getElementById('fileInputAudit').click()" style="font-size:14px; padding: 10px 20px; background:#ea580c;">
-                📂 Seleccionar Excel (Plan de Auditorias)
-              </button>
+              <!-- Caja 3 -->
+              <div style="padding: 20px; border: 2px dashed #ea580c; border-radius: 8px; text-align: center; background: #fff7ed;">
+                <h3 style="color:#c2410c; margin-bottom: 12px; font-size: 14px;">Indicadores de Auditorías</h3>
+                <input type="file" id="fileInputAudit" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Plan de Auditorias', this)">
+                <button class="msav" onclick="document.getElementById('fileInputAudit').value = null; document.getElementById('fileInputAudit').click()" style="font-size:13px; padding: 8px 16px; background:#ea580c; width:100%;">
+                  📂 Cargar Auditorías
+                </button>
+              </div>
+
+              <!-- Caja 4 -->
+              <div style="padding: 20px; border: 2px dashed #10b981; border-radius: 8px; text-align: center; background: #ecfdf5;">
+                <h3 style="color:#047857; margin-bottom: 12px; font-size: 14px;">Seguimiento Infraestructura</h3>
+                <input type="file" id="fileInputInfraC" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Seguimiento Infraestructura', this)">
+                <button class="msav" onclick="document.getElementById('fileInputInfraC').value = null; document.getElementById('fileInputInfraC').click()" style="font-size:13px; padding: 8px 16px; background:#10b981; width:100%;">
+                  🏗️ Cargar Seguimiento Infra
+                </button>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
 
-      <div class="tab-panel" id="tab5">
+    <div class="tab-panel" id="tab5">
         <div style="background:white; border-radius:12px; padding:24px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); margin-top:20px;">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f5f9; padding-bottom:16px; margin-bottom:16px;">
             <div>
@@ -1692,10 +1735,9 @@
           </table>
         </div>
       </div>
-    </div>
 
     <!-- Pestaña de Mensajes (Chat) -->
-    <div class="tab-panel" id="tab4">
+    <div class="tab-panel" id="tab6">
       <div
         style="background:white; border-radius:12px; padding:24px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); margin-top:20px;">
         <div style="margin-bottom:16px;">
@@ -1720,6 +1762,78 @@
       </div>
     </div>
 
+    <!-- Pestaña de Seguimiento Infraestructura -->
+    <div class="tab-panel" id="tab3">
+      <div class="fbar" style="background:#f1f5f9; padding:10px 15px; border-bottom:1px solid #e2e8f0; display:flex; flex-wrap:wrap; gap:15px; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">ÁREA</label><select class="fsel" id="fInfraArea" onchange="renderSeguimientoInfra()" style="width:130px; border-radius:6px;"><option value="">Todas</option></select></div>
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">RESPONSABLE</label><select class="fsel" id="fInfraResp" onchange="renderSeguimientoInfra()" style="width:130px; border-radius:6px;"><option value="">Todos</option></select></div>
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">ESTADO</label>
+            <select class="fsel" id="fInfraEst" onchange="renderSeguimientoInfra()" style="width:115px; border-radius:6px;">
+              <option value="">Todos</option>
+              <option value="Pendiente">⏳ Pendiente</option>
+              <option value="En proceso">🔄 En proceso</option>
+              <option value="Completado">✅ Completado</option>
+              <option value="Stand By">⏸ Stand By</option>
+            </select>
+          </div>
+        </div>
+        
+        <div style="flex:1;"></div>
+
+        <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">MES</label>
+            <select class="fsel" id="fInfraMes" onchange="renderSeguimientoInfra()" style="width:100px; border-radius:6px;">
+              <option value="">Todos</option>
+              <option value="ENERO">Enero</option><option value="FEBRERO">Febrero</option><option value="MARZO">Marzo</option><option value="ABRIL">Abril</option><option value="MAYO">Mayo</option><option value="JUNIO">Junio</option><option value="JULIO">Julio</option><option value="AGOSTO">Agosto</option><option value="SEPTIEMBRE">Septiembre</option><option value="OCTUBRE">Octubre</option><option value="NOVIEMBRE">Noviembre</option><option value="DICIEMBRE">Diciembre</option>
+            </select>
+          </div>
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">SEMANA</label>
+            <select class="fsel" id="fInfraSem" onchange="renderSeguimientoInfra()" style="width:115px; border-radius:6px;">
+              <option value="">Todas</option>
+              <option value="1">Semana 1</option><option value="2">Semana 2</option><option value="3">Semana 3</option><option value="4">Semana 4</option><option value="5">Semana 5</option><option value="6">Semana 6</option>
+            </select>
+          </div>
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">VISTA</label>
+            <select class="fsel" id="fInfraModo" onchange="renderSeguimientoInfra()" style="width:100px; border-radius:6px;">
+              <option value="dias">Días</option><option value="semanas" selected>Semanas</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:8px; margin-left:5px;">
+            <input type="file" id="infraFileInput" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Seguimiento Infraestructura', this)">
+            <button class="msav" style="margin:0; height:34px; padding:0 15px; background:#10b981; font-size:13px; border-radius:6px;" onclick="document.getElementById('infraFileInput').value = null; document.getElementById('infraFileInput').click()"><i class="fa-solid fa-file-excel"></i> Excel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rm-outer">
+        <div class="rm-scroll">
+          <table class="rmt" id="infraTable">
+            <thead>
+              <tr>
+                <th style="width:30px;">#</th>
+                <th style="width:40px; text-align:center;"><i class="fa-solid fa-gear"></i></th>
+                <th style="width:110px;">Área</th>
+                <th style="width:185px;">Proyecto / Actividad</th>
+                <th style="width:200px;">Detalle</th>
+                <th style="width:130px;">Responsable</th>
+                <th style="width:145px;">Estado</th>
+                <th style="width:60px;text-align:center;">Av.%</th>
+                <th style="width:120px;">F. Inicio</th>
+                <th style="width:120px;">F. Fin</th>
+                <th style="width:180px;">Observaciones</th>
+                <th class="tl">Gantt de Seguimiento</th>
+              </tr>
+            </thead>
+            <tbody id="infraBody">
+              <!-- Render via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Leyenda Gantt -->
+      <div id="ganttLegend" style="padding:8px 20px 10px; background:#f8fafc; border-top:1px solid #e2e8f0; flex-shrink:0;"></div>
+    </div>
   </div> <!-- Cierra .content -->
 
   <!-- User Edit Modal -->
@@ -1776,6 +1890,12 @@
                 <option value="none">Sin Acceso</option><option value="read">Solo Lectura</option><option value="write">Edición</option>
               </select>
             </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:600; color:#475569;">Seguimiento Infra:</span>
+              <select id="pTab3" style="padding:4px; border-radius:4px; border:1px solid #cbd5e1; outline:none; font-size:13px; width:150px;">
+                <option value="none">Sin Acceso</option><option value="read">Solo Lectura</option><option value="write">Edición</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -1823,6 +1943,7 @@
     let vMode = 'months';
     let currentCategory = 'Plan Operativo';
     let _firebaseReady = false;
+    let _lastWriteTs = 0; // Timestamp of last local write to ignore Firebase "echoes"
 
     // Helper para guardar en Firebase
     function saveToFirebase() {
@@ -1864,18 +1985,15 @@
         return d;
       });
 
-      // Only update appData if NOT in history mode
-      if (!isViewingHistory) {
+      // Only update appData if NOT in history mode and enough time passed since last local write
+      const now = Date.now();
+      if (!isViewingHistory && (now - _lastWriteTs > 3000)) {
         appData = normalizedData;
-      }
-      appHistory = freshHistory;
-      dailySnapshots = freshSnapshots;
-
-      // Snapshot del dÃ­a si no existe
-      const initTodayStr = new Date().toISOString().split('T')[0];
-      if (!dailySnapshots[initTodayStr] && freshData.length > 0) {
-        dailySnapshots[initTodayStr] = JSON.parse(JSON.stringify(freshData));
-        db.ref('dailySnapshots').set(dailySnapshots);
+        appHistory = freshHistory;
+        dailySnapshots = freshSnapshots;
+      } else if (isViewingHistory) {
+        appHistory = freshHistory;
+        dailySnapshots = freshSnapshots;
       }
 
       _firebaseReady = true;
@@ -2118,13 +2236,20 @@
             range: headerRowIndex, defval: ""
           });
 
-          let newId = categoryToUpdate === 'Servicios TI' ? 5000 : 1000;
+          let newId = 0;
+          if (categoryToUpdate === 'Plan Operativo') newId = 1000;
+          else if (categoryToUpdate === 'Plan de Auditorias') newId = 3000;
+          else if (categoryToUpdate === 'Seguimiento Infraestructura') newId = 6000;
+          else if (categoryToUpdate === 'Servicios TI') newId = 9000;
+          else newId = 10000;
+
+          const normalize = s => String(s).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
           const findCol = (row, names) => {
-            const lowerNames = names.map(n => n.toLowerCase());
+            const normNames = names.map(normalize);
 
             for (let key in row) {
-              if (lowerNames.includes(key.trim().toLowerCase())) return row[key];
+              if (normNames.includes(normalize(key))) return row[key];
             }
 
             return '';
@@ -2205,6 +2330,41 @@
                 avN: Math.round(avN),
                 repo: findCol(r, ['repositorio']) || '',
                 est: (avE >= 100) ? 'Completado' : (avP > 0 ? 'En Proceso' : 'Pendiente')
+              });
+            }
+            else if (categoryToUpdate === 'Seguimiento Infraestructura') {
+              const act = findCol(r, ['proyecto / actividad', 'proyecto/actividad', 'proyecto_actividad', 'PROYECTO/ACTIVIDAD', 'actividad', 'descripcion']);
+              const area = findCol(r, ['area', 'area responsable', 'departamento', 'gerencia', 'unidad']);
+              if (!act && !area) return;
+
+              let avR = findCol(r, ['avance real', 'avance', '% avance', 'porcentaje avance', 'progreso']);
+              avR = parseFloat(String(avR).replace('%','')) || 0;
+              if (avR <= 1 && avR > 0) avR = Math.round(avR * 100);
+              else avR = Math.round(avR);
+
+              const rawEst = findCol(r, ['estado', 'estatus']) || 'En proceso';
+              const normEst = (s) => {
+                const lo = String(s || '').trim().toLowerCase();
+                if (lo.includes('pendiente')) return 'Pendiente';
+                if (lo.includes('proceso')) return 'En proceso';
+                if (lo.includes('completado') || lo.includes('terminado') || lo.includes('finalizado') || lo.includes('completo')) return 'Completado';
+                if (lo.includes('stand')) return 'Stand By';
+                return 'En proceso';
+              };
+              const estVal = normEst(rawEst);
+
+              newItems.push({
+                id: ++newId,
+                category: 'Seguimiento Infraestructura',
+                area: area || 'S/A',
+                mant: act || 'S/N',
+                det: findCol(r, ['detalle', 'detalle actividad', 'detalles']) || '',
+                resp: findCol(r, ['responsable', 'jefe', 'encargado']) || 'N/A',
+                est: estVal,
+                ini: String(findCol(r, ['fecha inicio', 'inicio', 'f. inicio', 'f_inicio']) || ''),
+                fin: String(findCol(r, ['fecha fin', 'fin', 'f. fin', 'f_fin', 'termino']) || ''),
+                obs: findCol(r, ['observaciones', 'observacion', 'comentarios', 'notas']) || '',
+                avR: (estVal === 'Completado') ? 100 : avR
               });
             }
             else {
@@ -2300,12 +2460,26 @@
     // Escribe dashboardData + appHistory de forma atomica en Firebase
     function saveAllToFirebase() {
       if (!_firebaseReady) return;
+      
+      _lastWriteTs = Date.now(); // Bloquear el listener temporalmente
+
       const today = new Date().toISOString().split('T')[0];
-      dailySnapshots[today] = dailySnapshots[today] || JSON.parse(JSON.stringify(appData));
-      db.ref('/').update({
+      dailySnapshots[today] = JSON.parse(JSON.stringify(appData));
+      
+      return db.ref('/').update({
         dashboardData: appData,
         appHistory: appHistory,
         dailySnapshots: dailySnapshots
+      }).then(() => {
+        console.log("Save successful");
+      }).catch(e => {
+        console.error("Save error:", e);
+        showToast("Error Firebase: " + e.message, true);
+      }).finally(() => {
+        // Mantenemos el bloqueo un poco despues para que el listener ignore el eco
+        setTimeout(() => { 
+          if(Date.now() - _lastWriteTs >= 3000) _lastWriteTs = 0; 
+        }, 100);
       });
     }
 
@@ -2630,6 +2804,8 @@
     }
 
     function render() {
+      if (currentCategory === 'Plan de Auditorias') { renderAuditoria(); return; }
+      if (currentCategory === 'Seguimiento Infraestructura') { renderSeguimientoInfra(); return; }
       document.getElementById('th-act').textContent = currentCategory === 'Servicios TI' ? 'Proyecto / Iniciativa' : 'Actividad';
       document.getElementById('th-crit').textContent = currentCategory === 'Servicios TI' ? 'Avance Plan.' : 'Criticidad';
       document.getElementById('th-crit').style.display = '';
@@ -2862,11 +3038,20 @@
                   <option value="Produccion" ${item.etapa === 'Produccion' ? 'selected' : ''}>Produccion</option>
                 </select>
               </div>
+              ` : (currentCategory === 'Seguimiento Infraestructura' ? `
+              <div style="margin-bottom:12px;">
+                <div class="m-label" style="margin-bottom:4px;">Área / Equipo</div>
+                <input type="text" id="edArea" list="areaList" value="${item.area || ''}" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; outline:none; font-family:inherit;">
+              </div>
+              <input type="hidden" id="edClas" value="">
+              <input type="hidden" id="edEtapa" value="">
+              <input type="hidden" id="edDesc" value="">
               ` : `
               <input type="hidden" id="edArea" value="${item.area || ''}">
               <input type="hidden" id="edClas" value="">
               <input type="hidden" id="edEtapa" value="">
-              `}
+              <input type="hidden" id="edDesc" value="">
+              `)}
 
               <!-- INDICADORES REUBICADOS (Espacio resaltado) -->
               <div style="margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
@@ -3207,7 +3392,9 @@
 
       saveAllToFirebase();
       updateDropdowns();
-      render();
+      if (currentCategory === 'Plan de Auditorias') renderAuditoria();
+      else if (currentCategory === 'Seguimiento Infraestructura') renderSeguimientoInfra();
+      else render();
       closeModal();
       showToast('✅ Cambios guardados en la nube.');
     }
@@ -3288,25 +3475,29 @@
       if (i === 0 && (!window.currentUser.permissions.tab0 || window.currentUser.permissions.tab0 === 'none')) { showToast("⛔ No tienes permiso a Plan Operativo.", true); return; }
       if (i === 1 && (!window.currentUser.permissions.tab1 || window.currentUser.permissions.tab1 === 'none')) { showToast("⛔ No tienes permiso a Servicios TI.", true); return; }
       if (i === 2 && (!window.currentUser.permissions.tab2 || window.currentUser.permissions.tab2 === 'none')) { showToast("⛔ No tienes permiso a Auditorias.", true); return; }
-      if (i === 4 && window.currentUser.username !== 'admin' && window.currentUser.username !== 'jt') { showToast("⛔ Acceso privado a Mensajes.", true); return; }
+      if (i === 3 && (!window.currentUser.permissions.tab3 || window.currentUser.permissions.tab3 === 'none')) { showToast("⛔ No tienes permiso a Infraestructura.", true); return; }
+      if (i === 6 && window.currentUser.username !== 'admin' && window.currentUser.username !== 'jt') { showToast("⛔ Acceso privado a Mensajes.", true); return; }
       if (i === 5 && window.currentUser.username !== 'admin') { showToast("⛔ Acceso solo para administrador.", true); return; }
 
-      document.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+      const btns = document.querySelectorAll('.tab-btn');
+      for (let idx = 0; idx < btns.length; idx++) {
+        btns[idx].classList.toggle('active', idx === i);
+      }
 
       // Ocultar todos los paneles primero
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
 
       // Mostrar panel correspondiente
-      if (i === 3) {
-        document.getElementById('tab3').classList.add('active');
+      if (i === 4) {
+        document.getElementById('tab4').classList.add('active');
         document.getElementById('dashTitle').innerHTML = '<div>Configuracion</div><small>Sincronizacion de Datos</small>';
       }
       else if (i === 5) {
         document.getElementById('tab5').classList.add('active');
         document.getElementById('dashTitle').innerHTML = '<div>Usuarios</div><small>Gestion de Acceso al Sistema</small>';
       }
-      else if (i === 4) {
-        document.getElementById('tab4').classList.add('active');
+      else if (i === 6) {
+        document.getElementById('tab6').classList.add('active');
         document.getElementById('dashTitle').innerHTML = '<div>Chat Directo</div><small>Comunicacion Exclusiva (Admin / JT)</small>';
         loadWAMessages();
       }
@@ -3328,6 +3519,13 @@
           updateDropdowns();
           renderAuditoria();
           return;
+        }
+        else if (i === 3) {
+          document.getElementById('tab3').classList.add('active');
+          currentCategory = 'Seguimiento Infraestructura';
+          document.getElementById('dashTitle').innerHTML = '<div>Seguimiento Infraestructura</div><small>Control Operativo Semanal — 2026</small>';
+          updateDropdowns();
+          renderSeguimientoInfra();
         }
 
         updateDropdowns();
@@ -3390,6 +3588,26 @@
           const oldV = mEl.value;
           mEl.innerHTML = '<option value="">Todos</option>';
           [...mesSet].sort().forEach(m => mEl.innerHTML += `<option ${oldV===m?'selected':''}>${m}</option>`);
+        }
+      }
+
+      // --- Filtros Seguimiento Infra ---
+      if (currentCategory === 'Seguimiento Infraestructura') {
+        const aSet = new Set(), rSet = new Set();
+        currentData.forEach(d => {
+          if (d.area) aSet.add(d.area);
+          if (d.resp) rSet.add(d.resp);
+        });
+        const aEl = document.getElementById('fInfraArea'), rEl = document.getElementById('fInfraResp');
+        if (aEl) {
+          const oldV = aEl.value;
+          aEl.innerHTML = '<option value="">Todas</option>';
+          [...aSet].sort().forEach(a => aEl.innerHTML += `<option ${oldV===a?'selected':''}>${a}</option>`);
+        }
+        if (rEl) {
+          const oldV = rEl.value;
+          rEl.innerHTML = '<option value="">Todos</option>';
+          [...rSet].sort().forEach(r => rEl.innerHTML += `<option ${oldV===r?'selected':''}>${r}</option>`);
         }
       }
 
@@ -4031,6 +4249,12 @@
       if (user.username === 'admin') {
         document.getElementById('tabAdminBtn').style.display = 'inline-block';
         document.getElementById('tabUsersBtn').style.display = 'inline-block';
+        // Auto-grant permissions for admin if missing
+        if (!user.permissions) user.permissions = {};
+        if (!user.permissions.tab0) user.permissions.tab0 = 'write';
+        if (!user.permissions.tab1) user.permissions.tab1 = 'write';
+        if (!user.permissions.tab2) user.permissions.tab2 = 'write';
+        if (!user.permissions.tab3) user.permissions.tab3 = 'write';
         loadUsersTable();
       } else {
         document.getElementById('tabAdminBtn').style.display = 'inline-block';
@@ -4052,6 +4276,7 @@
       if (user.permissions.tab0 && user.permissions.tab0 !== 'none') switchTab(0);
       else if (user.permissions.tab1 && user.permissions.tab1 !== 'none') switchTab(1);
       else if (user.permissions.tab2 && user.permissions.tab2 !== 'none') switchTab(2);
+      else if (user.permissions.tab3 && user.permissions.tab3 !== 'none') switchTab(3);
       else showToast("⛔ No tienes pestañas asignadas. Contacta al administrador.", true);
     }
 
@@ -4064,6 +4289,365 @@
       document.getElementById('loginUser').value = '';
       document.getElementById('loginPass').value = '';
     }
+
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+      var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return weekNo;
+    }
+
+    function getDaysOfWeek(week, year) {
+      const d = new Date(year, 0, 1);
+      const dayNum = d.getDay() || 7;
+      const firstMonday = new Date(year, 0, 1 + (dayNum <= 4 ? 1 - dayNum : 8 - dayNum));
+      const targetMonday = new Date(firstMonday.getTime() + (week - 1) * 7 * 86400000);
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        days.push(new Date(targetMonday.getTime() + i * 86400000));
+      }
+      return days;
+    }
+
+    function renderSeguimientoInfra() {
+      const aFilt = document.getElementById('fInfraArea').value;
+      const rFilt = document.getElementById('fInfraResp').value;
+      const mFilt = document.getElementById('fInfraMes').value;
+      const sPick = document.getElementById('fInfraSem').value;
+      const eFilt = (document.getElementById('fInfraEst')) ? document.getElementById('fInfraEst').value : "";
+      const vModo = document.getElementById('fInfraModo').value;
+
+      const mesMap = { "ENERO": 0, "FEBRERO": 1, "MARZO": 2, "ABRIL": 3, "MAYO": 4, "JUNIO": 5, "JULIO": 6, "AGOSTO": 7, "SEPTIEMBRE": 8, "OCTUBRE": 9, "NOVIEMBRE": 10, "DICIEMBRE": 11 };
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const isTodayStr = today.toDateString();
+      const year = 2026;
+      let monthIdx = mFilt ? mesMap[mFilt] : today.getMonth();
+      
+      let periods = [];
+      let weekRange = null;
+
+      if (sPick) {
+        const sn = parseInt(sPick);
+        const firstM = new Date(year, monthIdx, 1);
+        const day = firstM.getDay() || 7;
+        firstM.setDate(firstM.getDate() - day + 1);
+        
+        let startDt = new Date(firstM);
+        startDt.setDate(startDt.getDate() + (sn - 1) * 7);
+        startDt.setHours(0,0,0,0);
+        
+        let endDt = new Date(startDt);
+        endDt.setDate(startDt.getDate() + 6);
+        endDt.setHours(23,59,59,999);
+        
+        weekRange = { start: startDt, end: endDt };
+        
+        const dNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+        for (let i = 0; i < 7; i++) {
+          let d = new Date(startDt);
+          const dn = dNames[d.getDay()];
+          periods.push({ 
+            start: d, 
+            end: d, 
+            label: `${dn} -${d.getDate()}`,
+            tooltip: `${d.getDate()}/${d.getMonth()+1} (${dn})`
+          });
+          startDt.setDate(startDt.getDate() + 1);
+        }
+      } else {
+        if (vModo === 'semanas') {
+          const first = new Date(year, monthIdx, 1);
+          const last = new Date(year, monthIdx + 1, 0);
+          let curr = new Date(first);
+          curr.setDate(curr.getDate() - (curr.getDay() || 7) + 1);
+          while(curr <= last) {
+            let s = new Date(curr), e = new Date(curr); e.setDate(e.getDate() + 6);
+            const sn = periods.length + 1;
+            periods.push({ 
+              start: s, 
+              end: e, 
+              label: `Sem ${sn}<br>${s.getDate()}/${s.getMonth()+1}`,
+              tooltip: `Semana ${sn}: ${s.getDate()}/${s.getMonth()+1} al ${e.getDate()}/${e.getMonth()+1}`
+            });
+            curr.setDate(curr.getDate() + 7);
+          }
+        } else {
+          const days = new Date(year, monthIdx + 1, 0).getDate();
+          for (let i = 1; i <= days; i++) {
+            let d = new Date(year, monthIdx, i);
+            periods.push({ start: d, end: d, label: i, tooltip: `Día ${i}` });
+          }
+        }
+      }
+
+      const data = appData.filter(d => {
+        if (d.category !== 'Seguimiento Infraestructura') return false;
+        
+        // Comparaciones robustas (sin espacios extra, sin distinguir mayúsculas/minúsculas)
+        const normalize = (s) => String(s || '').trim().toLowerCase();
+        
+        if (aFilt && normalize(d.area) !== normalize(aFilt)) return false;
+        if (rFilt && normalize(d.resp) !== normalize(rFilt)) return false;
+        if (eFilt && normalize(d.est) !== normalize(eFilt)) return false;
+        const dS = parseD(d.ini), dE = parseD(d.fin);
+        if (weekRange) {
+          if (!dS || !dE) return false;
+          // Overlap check with the 7-day week
+          return (dS <= weekRange.end && dE >= weekRange.start);
+        } else if (mFilt) {
+          if (!dS || !dE) return false;
+          const mStart = new Date(year, monthIdx, 1);
+          const mEnd = new Date(year, monthIdx + 1, 0, 23, 59, 59);
+          // Overlap check with the full month
+          return (dS <= mEnd && dE >= mStart);
+        }
+        return true;
+      });
+
+      const minColWith = (sPick || vModo === 'dias') ? 50 : 82;
+      const totalGWidth = periods.length * minColWith;
+
+      let headHtml = `<div style="min-width:${totalGWidth}px; display:flex; flex-direction:column; height:45px;">`;
+      
+      if (sPick) {
+        headHtml += `<div style="height:22px; border-bottom:1px solid rgba(255,255,255,0.1); text-align:center; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05);">
+          <span>SEMANA ${sPick}</span>
+        </div>`;
+      }
+      
+      headHtml += `<div style="display:flex; flex:1; align-items:center;">`;
+      periods.forEach(p => {
+        const isToday = p.start.toDateString() === isTodayStr || (today >= p.start && today <= p.end);
+        const isWknd = (p.start.getDay() === 0 || p.start.getDay() === 6);
+        headHtml += `<div style="flex:1; text-align:center; font-size:10px; line-height:1.2; border-left:1px solid rgba(255,255,255,0.2); height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+          ${isToday ? 'background:rgba(255,255,255,0.3); font-weight:800; border-bottom:3px solid #f59e0b;' : ''}
+          ${isWknd ? 'background:rgba(0,0,0,0.05);' : ''}">${p.label}</div>`;
+      });
+      headHtml += `</div></div>`;
+      document.querySelector('#infraTable thead th.tl').innerHTML = headHtml;
+
+      const STATUS_COLORS = {
+        'Completado': { bg: '#10b981', light: '#d1fae5', text: '#065f46' },
+        'En proceso': { bg: '#3b82f6', light: '#dbeafe', text: '#1e40af' },
+        'Pendiente':  { bg: '#f97316', light: '#fff7ed', text: '#9a3412' },
+        'Stand By':   { bg: '#6b7280', light: '#f3f4f6', text: '#374151' }
+      };
+      function getStatus(est) { return STATUS_COLORS[est] || STATUS_COLORS['Pendiente']; }
+
+      let tableHtml = '';
+      data.forEach((item, idx) => {
+        const s = parseD(item.ini), e = parseD(item.fin);
+        const sc = getStatus(item.est);
+        const avR = item.avR || 0;
+        const avColor = avR >= 100 ? '#10b981' : avR > 50 ? '#3b82f6' : '#f97316';
+
+        let barHtml = `<div style="display:flex; height:24px; border-radius:4px; overflow:hidden; border:1px solid #e2e8f0; min-width:${totalGWidth}px; background:#f9fafb;">`;
+        periods.forEach(p => {
+          let inRange = false; if (s && e) inRange = (s <= p.end && e >= p.start);
+          const isToday = p.start.toDateString() === isTodayStr || (today >= p.start && today <= p.end);
+          const isWknd = (p.start.getDay() === 0 || p.start.getDay() === 6);
+          const bg = inRange ? sc.bg : (isToday ? '#fef3c7' : (isWknd ? '#f3f4f6' : 'transparent'));
+          const border = isToday ? '1px solid #f59e0b' : '1px dashed #e2e8f0';
+          barHtml += `<div title="${p.tooltip}" style="flex:1; border-right:${border}; background:${bg}; transition:all 0.1s; height:100%;"></div>`;
+        });
+        barHtml += `</div>`;
+
+        const id = item.id;
+        const iniIso = dateToISO(item.ini);
+        const finIso = dateToISO(item.fin);
+
+        // Validacion de fechas contra hoy
+        let alertStyle = "";
+        const fEnd = parseD(item.fin);
+        if (fEnd && item.est !== 'Completado') {
+          const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+          const f0 = new Date(fEnd.getFullYear(), fEnd.getMonth(), fEnd.getDate()).getTime();
+          if (f0 < t0) alertStyle = "background:#fee2e2; color:#b91c1c; font-weight:700; border:1px solid #ef4444;";
+          else if (f0 === t0) alertStyle = "background:#fef3c7; color:#92400e; font-weight:700; border:1px solid #f59e0b;";
+        }
+
+        tableHtml += `<tr style="background:white; border-bottom:1px solid #f1f5f9;">
+          <td style="text-align:center; font-size:11px; color:#64748b;">${idx + 1}</td>
+          <td style="text-align:center;">
+            <button onclick="deleteRecord(${id})" style="border:none; background:none; color:#ef4444; cursor:pointer; font-size:14px;" title="Eliminar registro">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+          <td><input type="text" value="${esc(item.area)}" class="inline-edit" title="${esc(item.area)}" onchange="updateInfraField(${id}, 'area', this.value)"></td>
+          <td><input type="text" value="${esc(item.mant)}" class="inline-edit" style="font-weight:700;" title="${esc(item.mant)}" onchange="updateInfraField(${id}, 'mant', this.value)"></td>
+          <td><input type="text" value="${esc(item.det || '')}" class="inline-edit" title="${esc(item.det || '')}" onchange="updateInfraField(${id}, 'det', this.value)" placeholder="Detalle..."></td>
+          <td><input type="text" value="${esc(item.resp)}" class="inline-edit" style="${alertStyle}" title="${esc(item.resp)}" onchange="updateInfraField(${id}, 'resp', this.value)"></td>
+          <td>
+            <select class="inline-edit" onchange="updateInfraField(${id}, 'est', this.value)"
+              style="background:${sc.light}; color:${sc.text}; border:1px solid ${sc.bg}; font-weight:700; border-radius:12px; padding:3px 8px;">
+              <option value="Pendiente"   ${item.est==='Pendiente'?'selected':''}>⏳ Pendiente</option>
+              <option value="En proceso"  ${item.est==='En proceso'?'selected':''}>🔄 En proceso</option>
+              <option value="Completado"  ${item.est==='Completado'?'selected':''}>✅ Completado</option>
+              <option value="Stand By"    ${item.est==='Stand By'?'selected':''}>⏸ Stand By</option>
+            </select>
+          </td>
+          <td style="text-align:center;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:1px;">
+              <span style="font-size:10px; font-weight:700; color:${avColor};">${avR}%</span>
+              <input type="range" min="0" max="100" value="${avR}" style="width:45px; accent-color:${avColor};"
+                oninput="this.previousElementSibling.textContent=this.value+'%'"
+                onchange="updateInfraField(${id}, 'avR', parseInt(this.value))">
+            </div>
+          </td>
+          <td><input type="date" value="${iniIso}" class="inline-edit" onchange="updateInfraField(${id}, 'ini', isoToDate(this.value))"></td>
+          <td><input type="date" value="${finIso}" class="inline-edit" style="${alertStyle}" onchange="updateInfraField(${id}, 'fin', isoToDate(this.value))"></td>
+          <td><input type="text" value="${esc(item.obs || '')}" class="inline-edit" title="${esc(item.obs || '')}" onchange="updateInfraField(${id}, 'obs', this.value)" placeholder="Sin observaciones"></td>
+          <td class="tl">${barHtml}</td>
+        </tr>`;
+      });
+
+      // FILA PARA NUEVO REGISTRO (INLINE) - Autocompleta con filtros activos
+      tableHtml += `<tr style="background:#f0f9ff; border-top:2px solid #3b82f6;">
+        <td style="text-align:center; color:#3b82f6;"><i class="fa-solid fa-plus"></i></td>
+        <td style="text-align:center;">
+          <button onclick="createNewFromTable()" style="border:none; background:#3b82f6; color:white; border-radius:50%; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.1);" title="Crear registro">
+            <i class="fa-solid fa-plus" style="font-size:12px;"></i>
+          </button>
+        </td>
+        <td><input type="text" id="newArea" value="${esc(aFilt)}" class="inline-edit" style="background:#e0f2fe;" placeholder="Nueva área..."></td>
+        <td><input type="text" id="newMant" value="" class="inline-edit" style="background:#e0f2fe; font-weight:700;" placeholder="Nombre Proyecto..."></td>
+        <td><input type="text" id="newDet"  value="" class="inline-edit" style="background:#e0f2fe;" placeholder="Detalles..."></td>
+        <td><input type="text" id="newResp" value="${esc(rFilt)}" class="inline-edit" style="background:#e0f2fe;" placeholder="Responsable..."></td>
+        <td>
+          <select id="newEst" class="inline-edit" style="background:#e0f2fe; border-radius:12px; padding:3px 8px;">
+            <option value="Pendiente"   ${eFilt==='Pendiente'?'selected':''}>⏳ Pendiente</option>
+            <option value="En proceso"  ${eFilt==='En proceso'?'selected':''}>🔄 En proceso</option>
+            <option value="Completado"  ${eFilt==='Completado'?'selected':''}>✅ Completado</option>
+            <option value="Stand By"    ${eFilt==='Stand By'?'selected':''}>⏸ Stand By</option>
+          </select>
+        </td>
+        <td style="text-align:center;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:1px; opacity:0.5;">
+            <span style="font-size:10px; font-weight:700; color:#94a3b8;">0%</span>
+            <input type="range" min="0" max="100" value="0" style="width:45px;" disabled>
+          </div>
+        </td>
+        <td><input type="date" id="newIni" class="inline-edit" style="background:#e0f2fe;"></td>
+        <td><input type="date" id="newFin" class="inline-edit" style="background:#e0f2fe;"></td>
+        <td><input type="text" id="newObs" value="" class="inline-edit" style="background:#e0f2fe;" placeholder="Observaciones..."></td>
+        <td style="background:#e0f2fe; opacity:0.3; text-align:center; font-size:10px;">(Nueva)</td>
+      </tr>`;
+
+      const body = document.getElementById('infraBody');
+      if (body) body.innerHTML = tableHtml || '<tr><td colspan="12" style="text-align:center; padding:20px; color:#94a3b8;">No hay datos en esta vista.</td></tr>';
+
+      const legend = document.getElementById('ganttLegend');
+      if (legend) {
+        legend.innerHTML = `
+          <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+            <span style="font-size:11px; font-weight:700; color:#64748b;">Leyenda Gantt:</span>
+            <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px;height:14px;background:#3b82f6;border-radius:3px;display:inline-block;"></span><span style="font-size:11px;">En proceso</span></span>
+            <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px;height:14px;background:#10b981;border-radius:3px;display:inline-block;"></span><span style="font-size:11px;">Completado</span></span>
+            <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px;height:14px;background:#f97316;border-radius:3px;display:inline-block;"></span><span style="font-size:11px;">Pendiente</span></span>
+            <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px;height:14px;background:#6b7280;border-radius:3px;display:inline-block;"></span><span style="font-size:11px;">Stand By</span></span>
+            <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px;height:14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:3px;display:inline-block;"></span><span style="font-size:11px;">Hoy</span></span>
+          </div>`;
+      }
+    }
+
+    // Convierte dd/mm/yyyy o serial Excel → yyyy-mm-dd para input[type=date]
+    function dateToISO(s) {
+      if (!s) return '';
+      const str = String(s).trim();
+      // dd/mm/yyyy
+      const p = str.split('/');
+      if (p.length === 3 && p[2].length === 4) {
+        return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+      }
+      // yyyy-mm-dd already
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+      // Excel serial
+      const n = parseFloat(str);
+      if (!isNaN(n) && n > 1000) {
+        const d = new Date(Math.round((n - 25569) * 86400000));
+        if (d.getFullYear() > 1900) {
+          return d.toISOString().split('T')[0];
+        }
+      }
+      return '';
+    }
+
+    // Convierte yyyy-mm-dd → dd/mm/yyyy para almacenar
+    function isoToDate(s) {
+      if (!s) return '';
+      const p = s.split('-');
+      if (p.length === 3) return `${p[2]}/${p[1]}/${p[0]}`;
+      return s;
+    }
+
+    function createNewFromTable() {
+      const mantEl = document.getElementById('newMant');
+      const mantVal = mantEl.value.trim();
+      if (!mantVal) {
+        showToast("⚠ Escribe al menos el nombre del proyecto", true);
+        return;
+      }
+      
+      const newId = Date.now();
+      const newItem = {
+        id: newId,
+        category: 'Seguimiento Infraestructura',
+        area: document.getElementById('newArea').value.trim(),
+        mant: mantVal,
+        det:  document.getElementById('newDet').value.trim(),
+        resp: document.getElementById('newResp').value.trim(),
+        est:  document.getElementById('newEst').value,
+        avR: 0, avP: 0, 
+        ini: isoToDate(document.getElementById('newIni').value), 
+        fin: isoToDate(document.getElementById('newFin').value), 
+        obs: document.getElementById('newObs').value.trim(),
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      };
+      
+      appData.push(newItem);
+      saveAllToFirebase().then(() => {
+        showToast('✅ Registro creado correctamente');
+        renderSeguimientoInfra();
+      });
+    }
+
+    function updateInfraField(id, field, value) {
+      // Cambio CRITICO: buscar el ID filtrando por categoria para evitar duplicidad de IDs con Auditorias/Plan
+      const item = appData.find(d => d.id == id && d.category === 'Seguimiento Infraestructura');
+      
+      if (!item) {
+        console.warn('Infra: Item no encontrado con ID ' + id);
+        return;
+      }
+
+      // Actualización local inmediata
+      item[field] = value;
+      
+      // Sincronización automática de Avance y Estado
+      if (field === 'est' && value === 'Completado') {
+        item.avR = 100;
+      }
+      if (field === 'avR' && parseInt(value) === 100) {
+        item.est = 'Completado';
+      }
+      if (field === 'avR' && parseInt(value) < 100 && item.est === 'Completado') {
+        item.est = 'En proceso';
+      }
+
+      // Guardar con bloqueo
+      saveAllToFirebase().then(() => {
+        showToast('✅ Guardado');
+        // Redibujar para reflejar cambios de color, avance o fechas en el Gantt
+        if (['est', 'ini', 'fin', 'avR'].includes(field)) {
+          renderSeguimientoInfra();
+        }
+      });
+    }
+
+
 
     // Auto-login check
     window.addEventListener('load', () => {
@@ -4085,6 +4669,7 @@
       const p0 = document.getElementById('pTab0');
       const p1 = document.getElementById('pTab1');
       const p2 = document.getElementById('pTab2');
+      const p3 = document.getElementById('pTab3');
 
       document.getElementById('uModalTitle').innerText = id ? "Editar Usuario" : "Nuevo Usuario";
 
@@ -4097,13 +4682,14 @@
         p0.value = (!user.permissions || !user.permissions.tab0 || user.permissions.tab0 === 'none') ? 'none' : ((user.permissions.tab0 === true || user.permissions.tab0 === 'write') ? 'write' : 'read');
         p1.value = (!user.permissions || !user.permissions.tab1 || user.permissions.tab1 === 'none') ? 'none' : ((user.permissions.tab1 === true || user.permissions.tab1 === 'write') ? 'write' : 'read');
         p2.value = (!user.permissions || !user.permissions.tab2 || user.permissions.tab2 === 'none') ? 'none' : ((user.permissions.tab2 === true || user.permissions.tab2 === 'write') ? 'write' : 'read');
+        p3.value = (!user.permissions || !user.permissions.tab3 || user.permissions.tab3 === 'none') ? 'none' : ((user.permissions.tab3 === true || user.permissions.tab3 === 'write') ? 'write' : 'read');
         document.getElementById('uPassLabel').innerHTML = 'Contraseña <span style="font-weight:normal;">(Dejar en blanco para no cambiarla)</span>';
       } else {
         uId.value = '';
         uName.value = '';
         uUser.value = '';
         uPass.value = '';
-        p0.value = 'none'; p1.value = 'none'; p2.value = 'none';
+        p0.value = 'none'; p1.value = 'none'; p2.value = 'none'; p3.value = 'none';
         document.getElementById('uPassLabel').innerText = 'Contraseña';
       }
 
@@ -4144,7 +4730,8 @@
         permissions: {
           tab0: document.getElementById('pTab0').value,
           tab1: document.getElementById('pTab1').value,
-          tab2: document.getElementById('pTab2').value
+          tab2: document.getElementById('pTab2').value,
+          tab3: document.getElementById('pTab3').value
         }
       };
 
@@ -4184,7 +4771,8 @@
           let pTags = '';
           if (p.tab0 && p.tab0 !== 'none') pTags += `<span style="background:#e0e7ff; color:#3730a3; padding:2px 8px; border-radius:12px; font-size:12px; margin-right:4px;">Plan Op (${p.tab0==='read'?'L':'L/E'})</span>`;
           if (p.tab1 && p.tab1 !== 'none') pTags += `<span style="background:#dcfce7; color:#166534; padding:2px 8px; border-radius:12px; font-size:12px; margin-right:4px;">Serv TI (${p.tab1==='read'?'L':'L/E'})</span>`;
-          if (p.tab2 && p.tab2 !== 'none') pTags += `<span style="background:#fef9c3; color:#854d0e; padding:2px 8px; border-radius:12px; font-size:12px;">Audit (${p.tab2==='read'?'L':'L/E'})</span>`;
+          if (p.tab2 && p.tab2 !== 'none') pTags += `<span style="background:#fef9c3; color:#854d0e; padding:2px 8px; border-radius:12px; font-size:12px; margin-right:4px;">Audit (${p.tab2==='read'?'L':'L/E'})</span>`;
+          if (p.tab3 && p.tab3 !== 'none') pTags += `<span style="background:#ecfdf5; color:#047857; padding:2px 8px; border-radius:12px; font-size:12px;">Infra (${p.tab3==='read'?'L':'L/E'})</span>`;
           if (!pTags) pTags = '<span style="color:#94a3b8; font-size:12px;">Ninguno</span>';
 
           t.innerHTML += `<tr>
