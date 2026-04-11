@@ -1378,19 +1378,19 @@
         line-height: 1.5;
       }
 
-      .msg-bbl.mine {
+      .msg-bbl.msg-admin {
         align-self: flex-end;
         background: linear-gradient(135deg, #2563eb, #3b82f6);
         color: white;
         border-bottom-right-radius: 4px;
       }
 
-      .msg-bbl.theirs {
+      .msg-bbl.msg-jt {
         align-self: flex-start;
-        background-color: #ffffff;
-        color: #334155;
-        border: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #059669, #10b981);
+        color: white;
         border-bottom-left-radius: 4px;
+        border: 1px solid #10b981;
       }
 
       .msg-author {
@@ -1663,7 +1663,17 @@
     .ms-opt i.fa-check { opacity: 0; font-size: 12px; color: #0284c7; }
     .ms-opt.sel i.fa-check { opacity: 1; }
     .fsel[multiple] { display: none !important; }
-</style>
+      @keyframes waPulse {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(1.03); opacity: 0.9; color: #ef4444; }
+      }
+      .wa-alert-active {
+        animation: waPulse 1.2s infinite alternate !important;
+        background: rgba(239, 68, 68, 0.15) !important;
+        border: 1px solid rgba(239, 68, 68, 0.5) !important;
+        color: #ef4444 !important;
+      }
+    </style>
 </head>
 
 <body>
@@ -3031,8 +3041,9 @@
         </div>
 
         <div class="wa-chat-container">
-          <div class="wa-chat-header">
-            <i class="fa-solid fa-users"></i> Grupo Directivo
+          <div class="wa-chat-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div><i class="fa-solid fa-users"></i> Grupo Directivo</div>
+            <button id="waClearBtn" onclick="clearAllWAMessages()" style="display:none; background:#ef4444; color:white; border:none; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;" title="Limpiar Conversación"><i class="fa-solid fa-trash-can"></i> Vaciar Chat</button>
           </div>
           <div class="wa-chat-body" id="chatBody">
             <!-- Mensajes via JS -->
@@ -3052,6 +3063,7 @@
                 onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendWAMessage();}">
             </div>
             <button class="wa-send" id="waSendBtn" onclick="sendWAMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <button class="wa-send" id="waAlertBtn" onclick="sendMobileAlert()" style="background:#059669; margin-left:8px;" title="Enviar zumbido urgente al celular WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
           </div>
         </div>
       </div>
@@ -4924,7 +4936,7 @@
       if (i === 2 && (!window.currentUser.permissions.tab2 || window.currentUser.permissions.tab2 === 'none')) { showToast("⛔ No tienes permiso a Auditorias.", true); return; }
       if (i === 3 && (!window.currentUser.permissions.tab3 || window.currentUser.permissions.tab3 === 'none')) { showToast("⛔ No tienes permiso a Infraestructura.", true); return; }
       if (i === 6) {
-        if (window.currentUser.username !== 'admin' && window.currentUser.username !== 'jt') {
+        if ((!['admin','ac'].includes(window.currentUser.username)) && window.currentUser.username !== 'jt') {
           showToast('⛔ Acceso privado a Mensajes.', true); return;
         }
         // Pedir contraseña si no está autenticado en mensajes
@@ -4934,7 +4946,7 @@
           return;
         }
       }
-      if (i === 5 && window.currentUser.username !== 'admin') { showToast("⛔ Acceso solo para administrador.", true); return; }
+      if (i === 5 && (!['admin','ac'].includes(window.currentUser.username))) { showToast("⛔ Acceso solo para administrador.", true); return; }
 
       const btns = document.querySelectorAll('.tab-btn');
       for (let idx = 0; idx < btns.length; idx++) {
@@ -4943,7 +4955,7 @@
 
       // Ocultar todos los paneles primero
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      // Detener timer de inactividad si salimos de Mensajes
+            // Detener timer de inactividad si salimos de Mensajes
       if (window._currentTab === 6 && i !== 6 && typeof _clearMsgTimer === 'function') _clearMsgTimer();
       window._currentTab = i;
 
@@ -4960,6 +4972,11 @@
         window._currentTab = 6;
         document.getElementById('tab6').classList.add('active');
         document.getElementById('dashTitle').innerHTML = '<div>Chat Directo</div><small>Comunicacion Exclusiva (Admin / JT)</small>';
+        const tabBtn = document.getElementById('tabMsjBtn');
+        if(tabBtn) {
+            tabBtn.innerHTML = '💬 Mensajes';
+            tabBtn.classList.remove('wa-alert-active');
+        }
         loadWAMessages();
         // Iniciar timer de inactividad al entrar a Mensajes
         if (typeof _startMsgTimer === 'function') _startMsgTimer();
@@ -7390,6 +7407,17 @@
         return;
       }
 
+      // Check Super Admin AC
+      if (u === "ac" && p === "ac") {
+        loginSuccess({
+          username: "ac",
+          password: "ac",
+          name: "Super Admin",
+          permissions: { tab0: "write", tab1: "write", tab2: "write", tab3: "write" }
+        });
+        return;
+      }
+
       // Check Firebase Users
       db.ref('users').once('value').then(snapshot => {
         const data = snapshot.val() || {};
@@ -7427,7 +7455,7 @@
       document.getElementById('uaName').innerText = names[0] + (names.length > 1 ? ' ' + Object.values(names)[names.length - 1].charAt(0) + '.' : '');
       document.getElementById('uaAvatar').innerText = user.name.charAt(0).toUpperCase();
 
-      if (user.username === 'admin') {
+      if (['admin','ac'].includes(user.username)) {
         document.getElementById('tabAdminBtn').style.display = 'inline-block';
         document.getElementById('tabUsersBtn').style.display = 'inline-block';
         // Auto-grant permissions for admin if missing
@@ -7447,7 +7475,7 @@
         document.getElementById('tabUsersBtn').style.display = 'none';
       }
 
-      if (user.username === 'admin' || user.username === 'jt') {
+      if (['admin','ac'].includes(user.username) || user.username === 'jt') {
         document.getElementById('tabMsjBtn').style.display = 'inline-block';
       } else {
         document.getElementById('tabMsjBtn').style.display = 'none';
@@ -7882,7 +7910,7 @@
     }
 
     function saveUser() {
-      if (!window.currentUser || window.currentUser.username !== 'admin') return;
+      if (!window.currentUser || (!['admin','ac'].includes(window.currentUser.username))) return;
 
       const id = document.getElementById('uId').value || 'usr_' + Date.now();
       const name = document.getElementById('uName').value.trim();
@@ -7924,7 +7952,7 @@
     }
 
     function deleteUser(id) {
-      if (!window.currentUser || window.currentUser.username !== 'admin') return;
+      if (!window.currentUser || (!['admin','ac'].includes(window.currentUser.username))) return;
       if (confirm("¿Estás seguro de eliminar a este usuario permanentemente?")) {
         db.ref('users/' + id).remove().then(() => {
           showToast("ðŸ—‘ï¸ Usuario eliminado");
@@ -8022,9 +8050,38 @@
       document.addEventListener(evt, _resetMsgTimer, { passive: true });
     });
 
+    let _lastWaCount = -1;
+    let _bgChatInit = false;
+    
+    // Background listener initiator
+    setInterval(() => {
+      if (window.currentUser && ['admin','jt'].includes(window.currentUser.username) && !_bgChatInit) {
+          _bgChatInit = true;
+          loadWAMessages(); 
+      }
+    }, 2000);
+
     function loadWAMessages() {
       db.ref('mensajes').on('value', snap => {
-        waMessages = snap.val() ? Object.values(snap.val()) : [];
+        const vals = snap.val();
+        waMessages = vals ? Object.entries(vals).map(([k,v]) => ({...v, key: k})) : [];
+        
+        if (_lastWaCount !== -1 && waMessages.length > _lastWaCount) {
+             const sortedM = [...waMessages].sort((a,b) => a.timestamp - b.timestamp);
+             const lastMsg = sortedM[sortedM.length - 1];
+             if (window.currentUser && window.currentUser.username !== lastMsg.sender) {
+                 if (window._currentTab !== 6) {
+                     const who = ['admin','ac'].includes(lastMsg.sender) ? 'Administrador' : 'Jefe de Tecnología';
+                     showToast(`💬 Nuevo mensaje de ${who}`, false);
+                     const tabBtn = document.getElementById('tabMsjBtn');
+                     if(tabBtn && !tabBtn.innerHTML.includes('🔴')) {
+                         tabBtn.innerHTML = '💬 Mensajes 🔴';
+                         tabBtn.classList.add('wa-alert-active');
+                     }
+                 }
+             }
+        }
+        _lastWaCount = waMessages.length;
         renderWAMessages();
       });
     }
@@ -8032,12 +8089,17 @@
     function renderWAMessages() {
       const box = document.getElementById('chatBody');
       box.innerHTML = '';
+      
+      const canDeleteMsg = window.currentUser && window.currentUser.username === 'ac';
+      const clrBtn = document.getElementById('waClearBtn');
+      if (clrBtn) clrBtn.style.display = canDeleteMsg ? 'block' : 'none';
+
       waMessages.sort((a, b) => a.timestamp - b.timestamp).forEach(m => {
-        const isMe = window.currentUser && window.currentUser.username === m.sender;
-        const cls = isMe ? 'mine' : 'theirs';
+        const isAdminMsg = ['admin','ac'].includes(m.sender);
+        const cls = isAdminMsg ? 'msg-admin' : 'msg-jt';
         const date = new Date(m.timestamp);
         const timeStr = date.getHours().toString().padStart(2,'0') + ':' + date.getMinutes().toString().padStart(2,'0');
-        const senderLabel = m.sender === 'jt' ? 'Jefe de Tecnología' : 'Administrador';
+        const senderLabel = isAdminMsg ? 'Administrador' : 'Jefe de Tecnología';
 
         let contentHtml = '';
         if (m.imageData) {
@@ -8045,16 +8107,59 @@
             style="max-width:200px; max-height:160px; border-radius:8px; display:block; margin-bottom:${m.text?'6px':'0'}; cursor:pointer;"/>`;
         }
         if (m.text) contentHtml += `<div>${m.text}</div>`;
+        
+        let delBtnHtml = '';
+        if (canDeleteMsg) {
+           delBtnHtml = `<div onclick="deleteWAMessage('${m.key}')" title="Eliminar mensaje" style="position:absolute; ${isAdminMsg ? 'left:-26px;' : 'right:-26px;'} top:12px; cursor:pointer; color:#ef4444; background:white; border-radius:50%; width:20px; height:20px; display:flex; justify-content:center; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.2);"><i class="fa-solid fa-trash-can" style="font-size:10px;"></i></div>`;
+        }
 
         box.innerHTML += `
-          <div class="msg-bbl ${cls}">
-            ${!isMe ? `<div class="msg-author">${senderLabel}</div>` : ''}
+          <div class="msg-bbl ${cls}" style="margin-${isAdminMsg ? 'left' : 'right'}:26px;">
+            <div class="msg-author" style="color: rgba(255,255,255,0.7);">${senderLabel}</div>
+            ${delBtnHtml}
             ${contentHtml}
-            <div class="msg-time">${timeStr}</div>
+            <div class="msg-time" style="color:rgba(255,255,255,0.6); font-weight:normal;">${timeStr}</div>
           </div>
         `;
       });
       box.scrollTop = box.scrollHeight;
+    }
+
+    function deleteWAMessage(key) {
+      if(confirm('¿Seguro que deseas eliminar este mensaje de registro oficial?')) {
+         db.ref('mensajes/' + key).remove().catch(e => alert(e));
+      }
+    }
+
+    function sendMobileAlert() {
+      if (!window.currentUser) return;
+      const targetRole = ['admin','ac'].includes(window.currentUser.username) ? 'JT' : 'Administrador';
+      let targetPhone = localStorage.getItem('wa_target_phone_' + targetRole);
+      
+      if (!targetPhone) {
+         targetPhone = prompt(`Introduce el celular móvil del ${targetRole} (Ej. 593991234567)\nNo incluyas el signo '+' ni espacios:`);
+         if (!targetPhone) return;
+         localStorage.setItem('wa_target_phone_' + targetRole, targetPhone.trim());
+      } else {
+         // Allow editing the number if they hold shift? Just ask.
+         if(confirm(`El número guardado para el ${targetRole} es: ${targetPhone}\n¿Deseas enviar la alerta ahora?\n(Presiona Cancelar para cambiar este número)`)) {
+            // pass
+         } else {
+            targetPhone = prompt(`Actualiza el celular del ${targetRole} (Ej. 593991234567):`, targetPhone);
+            if (!targetPhone) return;
+            localStorage.setItem('wa_target_phone_' + targetRole, targetPhone.trim());
+         }
+      }
+      
+      const msg = `🚨 *Alerta Urgente del Dashboard*\nTienes mensajes requeridos esperando tu acción en la plataforma, por parte del ${['admin','ac'].includes(window.currentUser.username) ? 'Administrador' : 'JT'}.\n\nPor favor, ingresa al Sistema Operativo.`;
+      const url = `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    function clearAllWAMessages() {
+      if(confirm('¿ESTÁS ABSOLUTAMENTE SEGURO? Se vaciará toda la conversación de lado y lado sin retorno.')) {
+         db.ref('mensajes').remove().catch(e => alert(e));
+      }
     }
 
     function previewWAImage(input) {
@@ -8062,10 +8167,21 @@
       const file = input.files[0];
       const reader = new FileReader();
       reader.onload = e => {
-        _waImageData = e.target.result;
-        const thumb = document.getElementById('waImgThumb');
-        const preview = document.getElementById('waImgPreview');
-        if (thumb) { thumb.src = _waImageData; preview.style.display = 'block'; }
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width; let h = img.height;
+          if (w > 800) { h *= 800 / w; w = 800; }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          _waImageData = canvas.toDataURL('image/jpeg', 0.85); // Compress to 85% JPEG
+          
+          const thumb = document.getElementById('waImgThumb');
+          const preview = document.getElementById('waImgPreview');
+          if (thumb) { thumb.src = _waImageData; preview.style.display = 'block'; }
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
