@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -133,6 +133,7 @@
 
     .content {
       flex: 1;
+      min-height: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column
@@ -141,6 +142,7 @@
     .tab-panel {
       display: none;
       flex: 1;
+      min-height: 0;
       flex-direction: column;
       overflow: hidden
     }
@@ -255,6 +257,7 @@
 
     .rm-outer {
       flex: 1;
+      min-height: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -263,7 +266,9 @@
 
     .rm-scroll {
       flex: 1;
+      min-height: 0;
       overflow: auto;
+      height: calc(100vh - 215px);
       border: 1px solid var(--brd);
       border-radius: var(--rad);
       background: var(--sur);
