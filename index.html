@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -133,7 +133,6 @@
 
     .content {
       flex: 1;
-      min-height: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column
@@ -142,7 +141,6 @@
     .tab-panel {
       display: none;
       flex: 1;
-      min-height: 0;
       flex-direction: column;
       overflow: hidden
     }
@@ -257,7 +255,6 @@
 
     .rm-outer {
       flex: 1;
-      min-height: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -266,9 +263,7 @@
 
     .rm-scroll {
       flex: 1;
-      min-height: 0;
       overflow: auto;
-      height: calc(100vh - 215px);
       border: 1px solid var(--brd);
       border-radius: var(--rad);
       background: var(--sur);
@@ -1985,7 +1980,7 @@
         <div class="fbar"><div id="btnVolverHub" style="display:none; margin-right:15px; border-right:1px solid #cbd5e1; padding-right:15px;"><button onclick="goBackToHub()" class="msbtn" style="background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Volver al Hub</button></div>
                     <div class="fitem"><label>Area</label><select class="fsel" id="fArea" multiple onchange="render()"><option value="">Todas</option></select></div>
           <div class="fitem" id="ftipo-container"><label>Tipo</label><select class="fsel" id="fTipo" multiple onchange="render()"><option value="">Todos</option></select></div>
-          <div class="fitem" id="farea-negocio-container"><label>Area de Negocio</label><select class="fsel" id="fAreaNegocio" multiple onchange="render()"><option value="">Todas</option><option value="Clientes">Clientes</option><option value="Comercial">Comercial</option><option value="Convenios">Convenios</option><option value="Finanzas">Finanzas</option><option value="J2C">J2C</option><option value="Logistica">Logistica</option><option value="Operaciones">Operaciones</option><option value="RRHH">RRHH</option><option value="TI">TI</option></select></div>
+          <div class="fitem" id="farea-negocio-container"><label>Area de Negocio</label><select class="fsel" id="fAreaNegocio" multiple onchange="render()"><option value="">Todas</option><option value="Clientes">Clientes</option><option value="Comercial">Comercial</option><option value="Convenios">Convenios</option><option value="Finanzas">Finanzas</option><option value="Logistica">Logistica</option><option value="Operaciones">Operaciones</option><option value="RRHH">RRHH</option><option value="TI">TI</option></select></div>
           <div class="fitem" id="fclas-container"><label>Clasificación</label><select class="fsel" id="fClas" multiple onchange="render()"><option value="">Todas</option></select></div>
           <div class="fitem"><label>Estado</label><select class="fsel" id="fEst" multiple onchange="render()"><option value="">Todos</option></select></div>
           <div class="fitem" id="fetapa-container"><label>Etapas</label><select class="fsel" id="fEtapa" multiple onchange="render()"><option value="">Todas</option></select></div>
@@ -4586,7 +4581,6 @@
                     <option value="Comercial" ${item.areaNegocio === 'Comercial' ? 'selected' : ''}>Comercial</option>
                     <option value="Convenios" ${item.areaNegocio === 'Convenios' ? 'selected' : ''}>Convenios</option>
                     <option value="Finanzas" ${item.areaNegocio === 'Finanzas' ? 'selected' : ''}>Finanzas</option>
-                    <option value="J2C" ${item.areaNegocio === 'J2C' ? 'selected' : ''}>J2C</option>
                     <option value="Logistica" ${item.areaNegocio === 'Logistica' ? 'selected' : ''}>Logistica</option>
                     <option value="Operaciones" ${item.areaNegocio === 'Operaciones' ? 'selected' : ''}>Operaciones</option>
                     <option value="RRHH" ${item.areaNegocio === 'RRHH' ? 'selected' : ''}>RRHH</option>
@@ -7590,8 +7584,8 @@
         document.getElementById('tabUsersBtn').style.display = 'none';
       }
 
-      // Solo 'ac' puede ver Mensajes
-      if (user.username === 'ac') {
+      // Activar pestaña mensajes para admin, jt y ac
+      if (['ac', 'admin', 'jt'].includes(user.username)) {
         document.getElementById('tabMsjBtn').style.display = 'inline-block';
       } else {
         document.getElementById('tabMsjBtn').style.display = 'none';
@@ -8171,7 +8165,7 @@
     
     // Background listener initiator
     setInterval(() => {
-      if (window.currentUser && ['admin','jt'].includes(window.currentUser.username) && !_bgChatInit) {
+      if (window.currentUser && ['ac', 'admin', 'jt'].includes(window.currentUser.username) && !_bgChatInit) {
           _bgChatInit = true;
           loadWAMessages(); 
       }
