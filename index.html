@@ -169,19 +169,21 @@
       box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    #infraTable input.inline-edit,
+    #infraTable input.inline-edit {
+      width: 100%;
+    }
+    
     #infraTable textarea.inline-edit {
-      font-weight: normal;
+      width: 440px;
+      min-height: 50px;
+    }
+
+    #infraTable input.new-det-input {
+      width: 440px;
     }
 
     #infraTable select.inline-edit {
       cursor: pointer;
-    }
-
-    #infraTable textarea.inline-edit {
-      width: 100%;
-      min-width: 150px;
-      font-family: inherit;
     }
 
     .fbar {
@@ -3247,15 +3249,15 @@
               <tr>
                 <th style="width:30px;">#</th>
                 <th style="width:40px; text-align:center;"><i class="fa-solid fa-gear"></i></th>
-                <th style="width:110px;">Área</th>
-                <th style="width:185px;">Proyecto / Actividad</th>
-                <th style="width:200px;">Detalle</th>
-                <th style="width:130px;">Responsable</th>
-                <th style="width:145px;">Estado</th>
+                <th style="width:90px;">Área</th>
+                <th style="width:140px;">Proyecto / Actividad</th>
+                <th style="width:450px;">Detalle</th>
+                <th style="width:100px;">Responsable</th>
+                <th style="width:120px;">Estado</th>
                 <th style="width:60px;text-align:center;">Av.%</th>
-                <th style="width:120px;">F. Inicio</th>
-                <th style="width:120px;">F. Fin</th>
-                <th style="width:180px;">Observaciones</th>
+                <th style="width:100px;">F. Inicio</th>
+                <th style="width:100px;">F. Fin</th>
+                <th style="width:140px;">Observaciones</th>
                 <th class="tl">Gantt de Seguimiento</th>
               </tr>
             </thead>
@@ -7825,7 +7827,7 @@ else if (i === 6) {
           </td>
           <td><input type="text" value="${esc(item.area)}" class="inline-edit" title="${esc(item.area)}" onchange="updateInfraField(${id}, 'area', this.value)"></td>
           <td><input type="text" value="${esc(item.mant)}" class="inline-edit" style="font-weight:700;" title="${esc(item.mant)}" onchange="updateInfraField(${id}, 'mant', this.value)"></td>
-          <td><textarea class="inline-edit" style="min-height:50px; resize:vertical; white-space:pre-wrap; word-wrap:break-word;" title="${esc(item.det || '')}" onchange="updateInfraField(${id}, 'det', this.value)" placeholder="Detalle..." rows="2">${esc(item.det || '')}</textarea></td>
+          <td><textarea class="inline-edit" style="min-height:50px; resize:vertical; width:440px; white-space:pre-wrap; word-wrap:break-word;" title="${esc(item.det || '')}" onchange="event.stopPropagation(); updateInfraField(${id}, 'det', this.value)" placeholder="Detalle..." rows="2">${esc(item.det || '')}</textarea></td>
           <td><input type="text" value="${esc(item.resp)}" class="inline-edit" style="${alertStyle}" title="${esc(item.resp)}" onchange="updateInfraField(${id}, 'resp', this.value)"></td>
           <td>
             <select class="inline-edit" onchange="updateInfraField(${id}, 'est', this.value)"
@@ -7855,13 +7857,13 @@ else if (i === 6) {
       tableHtml += `<tr style="background:#f0f9ff; border-top:2px solid #3b82f6;">
         <td style="text-align:center; color:#3b82f6;"><i class="fa-solid fa-plus"></i></td>
         <td style="text-align:center;">
-          <button onclick="createNewFromTable()" style="border:none; background:#3b82f6; color:white; border-radius:50%; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.1);" title="Crear registro">
+          <button onclick="event.preventDefault(); event.stopPropagation(); createNewFromTable(); return false;" style="border:none; background:#3b82f6; color:white; border-radius:50%; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.1);" title="Crear registro">
             <i class="fa-solid fa-plus" style="font-size:12px;"></i>
           </button>
         </td>
         <td><input type="text" id="newArea" value="${esc(aFilt)}" class="inline-edit" style="background:#e0f2fe;" placeholder="Nueva área..."></td>
         <td><input type="text" id="newMant" value="" class="inline-edit" style="background:#e0f2fe; font-weight:700;" placeholder="Nombre Proyecto..."></td>
-        <td><textarea id="newDet" class="inline-edit" style="background:#e0f2fe; min-height:50px; resize:vertical; white-space:pre-wrap; word-wrap:break-word;" placeholder="Detalles..." rows="2"></textarea></td>
+        <td><input type="text" id="newDet" class="inline-edit new-det-input" style="background:#e0f2fe;" placeholder="Detalles..."></td>
         <td><input type="text" id="newResp" value="${esc(rFilt)}" class="inline-edit" style="background:#e0f2fe;" placeholder="Responsable..."></td>
         <td>
           <select id="newEst" class="inline-edit" style="background:#e0f2fe; border-radius:12px; padding:3px 8px;">
@@ -8373,7 +8375,7 @@ const isRead = m.read;
 
   <!-- Modal: Contraseña MSN -->
   <div id="msgPassModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999999; align-items:center; justify-content:center;">
-    <div style="background:#fff; border-radius:20px; padding:32px 36px; width:340px; box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center;">
+    <div style="background:#fff; border-radius:20px; padding:32px 36px; width:440px; box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center;">
       <div style="font-size:40px; margin-bottom:12px;">🔒</div>
       <h3 style="margin:0 0 6px 0; color:#0f172a; font-size:18px;">Acceso a MSN</h3>
       <p style="color:#64748b; font-size:13px; margin:0 0 20px 0;">Ingresa la contraseña para continuar</p>
