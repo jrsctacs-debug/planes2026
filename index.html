@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -169,12 +169,19 @@
       box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    #infraTable input.inline-edit {
+    #infraTable input.inline-edit,
+    #infraTable textarea.inline-edit {
       font-weight: normal;
     }
 
     #infraTable select.inline-edit {
       cursor: pointer;
+    }
+
+    #infraTable textarea.inline-edit {
+      width: 100%;
+      min-width: 150px;
+      font-family: inherit;
     }
 
     .fbar {
@@ -1407,6 +1414,18 @@
         font-size: 10px;
         opacity: 0.7;
         float: right;
+      }
+      .msg-read {
+        font-size: 10px;
+        float: right;
+        margin-left: 4px;
+      }
+      .msg-read.pending {
+        color: rgba(255,255,255,0.5);
+      }
+      .msg-read.read {
+        color: #34d7ff;
+      }
         margin-left: 12px;
         margin-top: 6px;
       }
@@ -1760,7 +1779,7 @@
       <button class="tab-btn" id="tabAdminBtn" onclick="switchTab(4)">⚙️ Configuración</button>
       <button class="tab-btn" id="tabUsersBtn" onclick="switchTab(5)" style="display:none;">🛡️ Usuarios</button>
       <button class="tab-btn" id="tabMsjBtn" onclick="switchTab(6)"
-        style="display:none; color: #00a884; font-weight: bold;">💬 Mensajes</button>
+        style="display:none; color: #00a884; font-weight: bold;">💬 MSN</button>
     </div>
     <div id="toast"
       style="position:fixed; bottom:20px; right:20px; background:#10b981; color:#fff; padding:15px 25px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); font-family:sans-serif; font-weight:600; font-size: 15px; display:none; z-index:9999; opacity:0; transition:opacity 0.3s;">
@@ -3138,7 +3157,7 @@
         </div>
       </div>
 
-    <!-- Pestaña de Mensajes (Chat) -->
+    <!-- Pestaña de MSN (Chat) -->
     <div class="tab-panel" id="tab6">
       <div
         style="background:white; border-radius:12px; padding:24px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); margin-top:20px;">
@@ -3154,7 +3173,7 @@
             <button id="waClearBtn" onclick="clearAllWAMessages()" style="display:none; background:#ef4444; color:white; border:none; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;" title="Limpiar Conversación"><i class="fa-solid fa-trash-can"></i> Vaciar Chat</button>
           </div>
           <div class="wa-chat-body" id="chatBody">
-            <!-- Mensajes via JS -->
+            <!-- MSN via JS -->
           </div>
           <div class="wa-chat-input-area">
             <input type="file" id="waImageInput" accept="image/*" hidden onchange="previewWAImage(this)">
@@ -5046,7 +5065,7 @@
       if (i === 3 && (!window.currentUser.permissions.tab3 || window.currentUser.permissions.tab3 === 'none')) { showToast("⛔ No tienes permiso a Infraestructura.", true); return; }
       if (i === 6) {
         if ((!['admin','ac'].includes(window.currentUser.username)) && window.currentUser.username !== 'jt') {
-          showToast('⛔ Acceso privado a Mensajes.', true); return;
+          showToast('⛔ Acceso privado a MSN.', true); return;
         }
         // Pedir contraseña si no está autenticado en mensajes
         if (!window._msgAuth) {
@@ -5064,7 +5083,7 @@
 
       // Ocultar todos los paneles primero
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            // Detener timer de inactividad si salimos de Mensajes
+            // Detener timer de inactividad si salimos de MSN
       if (window._currentTab === 6 && i !== 6 && typeof _clearMsgTimer === 'function') _clearMsgTimer();
       window._currentTab = i;
 
@@ -5077,17 +5096,26 @@
         document.getElementById('tab5').classList.add('active');
         document.getElementById('dashTitle').innerHTML = '<div>Usuarios</div><small>Gestion de Acceso al Sistema</small>';
       }
-      else if (i === 6) {
+else if (i === 6) {
         window._currentTab = 6;
         document.getElementById('tab6').classList.add('active');
         document.getElementById('dashTitle').innerHTML = '<div>Chat Directo</div><small>Comunicacion Exclusiva (Admin / JT)</small>';
         const tabBtn = document.getElementById('tabMsjBtn');
         if(tabBtn) {
-            tabBtn.innerHTML = '💬 Mensajes';
+            tabBtn.innerHTML = '💬 MSN';
             tabBtn.classList.remove('wa-alert-active');
         }
         loadWAMessages();
-        // Iniciar timer de inactividad al entrar a Mensajes
+        // Marcar mensajes del otro usuario como leídos
+        if (window.currentUser) {
+          const myUsername = window.currentUser.username;
+          waMessages.forEach(m => {
+            if (m.sender !== myUsername && !m.read) {
+              db.ref('mensajes/' + m.key + '/read').set(true);
+            }
+          });
+        }
+        // Iniciar timer de inactividad al entrar a MSN
         if (typeof _startMsgTimer === 'function') _startMsgTimer();
       }
       else {
@@ -7797,7 +7825,7 @@
           </td>
           <td><input type="text" value="${esc(item.area)}" class="inline-edit" title="${esc(item.area)}" onchange="updateInfraField(${id}, 'area', this.value)"></td>
           <td><input type="text" value="${esc(item.mant)}" class="inline-edit" style="font-weight:700;" title="${esc(item.mant)}" onchange="updateInfraField(${id}, 'mant', this.value)"></td>
-          <td><input type="text" value="${esc(item.det || '')}" class="inline-edit" title="${esc(item.det || '')}" onchange="updateInfraField(${id}, 'det', this.value)" placeholder="Detalle..."></td>
+          <td><textarea class="inline-edit" style="min-height:50px; resize:vertical; white-space:pre-wrap; word-wrap:break-word;" title="${esc(item.det || '')}" onchange="updateInfraField(${id}, 'det', this.value)" placeholder="Detalle..." rows="2">${esc(item.det || '')}</textarea></td>
           <td><input type="text" value="${esc(item.resp)}" class="inline-edit" style="${alertStyle}" title="${esc(item.resp)}" onchange="updateInfraField(${id}, 'resp', this.value)"></td>
           <td>
             <select class="inline-edit" onchange="updateInfraField(${id}, 'est', this.value)"
@@ -7833,7 +7861,7 @@
         </td>
         <td><input type="text" id="newArea" value="${esc(aFilt)}" class="inline-edit" style="background:#e0f2fe;" placeholder="Nueva área..."></td>
         <td><input type="text" id="newMant" value="" class="inline-edit" style="background:#e0f2fe; font-weight:700;" placeholder="Nombre Proyecto..."></td>
-        <td><input type="text" id="newDet"  value="" class="inline-edit" style="background:#e0f2fe;" placeholder="Detalles..."></td>
+        <td><textarea id="newDet" class="inline-edit" style="background:#e0f2fe; min-height:50px; resize:vertical; white-space:pre-wrap; word-wrap:break-word;" placeholder="Detalles..." rows="2"></textarea></td>
         <td><input type="text" id="newResp" value="${esc(rFilt)}" class="inline-edit" style="background:#e0f2fe;" placeholder="Responsable..."></td>
         <td>
           <select id="newEst" class="inline-edit" style="background:#e0f2fe; border-radius:12px; padding:3px 8px;">
@@ -8107,24 +8135,13 @@
       });
     }
 
-    // Verificar contraseña de acceso a Mensajes
+    // Verificar contraseña de acceso a MSN
     function checkMsgPass() {
-      const input = document.getElementById('msgPassInput');
-      const errEl = document.getElementById('msgPassError');
-      if ((input.value || '').trim() === 'jr0702') {
-        window._msgAuth = true;
-        document.getElementById('msgPassModal').style.display = 'none';
-        input.value = '';
-        errEl.style.display = 'none';
-        // Ir a la pestaña de mensajes
-        if (window._pendingMsgTab !== undefined) {
-          switchTab(window._pendingMsgTab);
-          window._pendingMsgTab = undefined;
-        }
-      } else {
-        errEl.style.display = 'block';
-        input.value = '';
-        input.focus();
+      window._msgAuth = true;
+      document.getElementById('msgPassModal').style.display = 'none';
+      if (window._pendingMsgTab !== undefined) {
+        switchTab(window._pendingMsgTab);
+        window._pendingMsgTab = undefined;
       }
     }
 
@@ -8132,7 +8149,7 @@
     let waMessages = [];
     let _waImageData = null;
 
-    // --- Inactividad en Mensajes: cierre automático a los 20 segundos ---
+    // --- Inactividad en MSN: cierre automático a los 20 segundos ---
     let _msgInactivityTimer = null;
     const MSG_TIMEOUT = 20000; // 20 segundos
 
@@ -8142,7 +8159,7 @@
         if (window._currentTab === 6) {
           window._msgAuth = false;
           switchTab(0);
-          showToast('🔒 Sesión de Mensajes cerrada por inactividad.', true);
+          showToast('🔒 Sesión de MSN cerrada por inactividad.', true);
         }
       }, MSG_TIMEOUT);
     }
@@ -8176,21 +8193,25 @@
         const vals = snap.val();
         waMessages = vals ? Object.entries(vals).map(([k,v]) => ({...v, key: k})) : [];
         
-        if (_lastWaCount !== -1 && waMessages.length > _lastWaCount) {
-             const sortedM = [...waMessages].sort((a,b) => a.timestamp - b.timestamp);
-             const lastMsg = sortedM[sortedM.length - 1];
-             if (window.currentUser && window.currentUser.username !== lastMsg.sender) {
-                 if (window._currentTab !== 6) {
-                     const who = ['admin','ac'].includes(lastMsg.sender) ? 'Administrador' : 'Jefe de Tecnología';
-                     showToast(`💬 Nuevo mensaje de ${who}`, false);
-                     const tabBtn = document.getElementById('tabMsjBtn');
-                     if(tabBtn && !tabBtn.innerHTML.includes('🔴')) {
-                         tabBtn.innerHTML = '💬 Mensajes 🔴';
-                         tabBtn.classList.add('wa-alert-active');
-                     }
-                 }
-             }
-        }
+if (_lastWaCount !== -1 && waMessages.length > _lastWaCount) {
+              const sortedM = [...waMessages].sort((a,b) => a.timestamp - b.timestamp);
+              const lastMsg = sortedM[sortedM.length - 1];
+              if (window.currentUser && window.currentUser.username !== lastMsg.sender) {
+                  // Reproducir sonido de notificación
+                  const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                  audio.volume = 0.5;
+                  audio.play().catch(() => {});
+                  if (window._currentTab !== 6) {
+                      const who = ['admin','ac'].includes(lastMsg.sender) ? 'Administrador' : 'Jefe de Tecnología';
+                      showToast(`💬 Nuevo mensaje de ${who}`, false);
+                      const tabBtn = document.getElementById('tabMsjBtn');
+                      if(tabBtn && !tabBtn.innerHTML.includes('🔴')) {
+                          tabBtn.innerHTML = '💬 MSN 🔴';
+                          tabBtn.classList.add('wa-alert-active');
+                      }
+                  }
+              }
+         }
         _lastWaCount = waMessages.length;
         renderWAMessages();
       });
@@ -8223,12 +8244,19 @@
            delBtnHtml = `<div onclick="deleteWAMessage('${m.key}')" title="Eliminar mensaje" style="position:absolute; ${isAdminMsg ? 'left:-26px;' : 'right:-26px;'} top:12px; cursor:pointer; color:#ef4444; background:white; border-radius:50%; width:20px; height:20px; display:flex; justify-content:center; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.2);"><i class="fa-solid fa-trash-can" style="font-size:10px;"></i></div>`;
         }
 
+const isRead = m.read;
+        const readIcon = isRead ? '✓✓' : '✓';
+        const readClass = isRead ? 'read' : 'pending';
+        
         box.innerHTML += `
           <div class="msg-bbl ${cls}" style="margin-${isAdminMsg ? 'left' : 'right'}:26px;">
             <div class="msg-author" style="color: rgba(255,255,255,0.7);">${senderLabel}</div>
             ${delBtnHtml}
             ${contentHtml}
-            <div class="msg-time" style="color:rgba(255,255,255,0.6); font-weight:normal;">${timeStr}</div>
+            <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
+              <span class="msg-read ${readClass}">${readIcon}</span>
+              <span class="msg-time" style="color:rgba(255,255,255,0.6); font-weight:normal;">${timeStr}</span>
+            </div>
           </div>
         `;
       });
@@ -8318,12 +8346,19 @@
       const msg = {
         sender: username,
         text: text,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        read: false
       };
       // Adjuntar imagen si existe
       if (_waImageData) msg.imageData = _waImageData;
 
       db.ref('mensajes').push(msg).then(() => {
+        // Marcar como leídos los mensajes enviados por el otro usuario
+        waMessages.forEach(m => {
+          if (m.sender !== username && !m.read) {
+            db.ref('mensajes/' + m.key + '/read').set(true);
+          }
+        });
         input.value = '';
         clearWAImage();
         document.getElementById('waSendBtn').disabled = false;
@@ -8336,11 +8371,11 @@
 
   </script>
 
-  <!-- Modal: Contraseña Mensajes -->
+  <!-- Modal: Contraseña MSN -->
   <div id="msgPassModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999999; align-items:center; justify-content:center;">
     <div style="background:#fff; border-radius:20px; padding:32px 36px; width:340px; box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center;">
       <div style="font-size:40px; margin-bottom:12px;">🔒</div>
-      <h3 style="margin:0 0 6px 0; color:#0f172a; font-size:18px;">Acceso a Mensajes</h3>
+      <h3 style="margin:0 0 6px 0; color:#0f172a; font-size:18px;">Acceso a MSN</h3>
       <p style="color:#64748b; font-size:13px; margin:0 0 20px 0;">Ingresa la contraseña para continuar</p>
       <input type="password" id="msgPassInput"
         style="width:100%; padding:12px 16px; border:2px solid #e2e8f0; border-radius:12px; font-size:15px; outline:none; box-sizing:border-box; margin-bottom:8px;"
