@@ -1999,13 +1999,13 @@
           </div>
         </div>
         <div class="fbar"><div id="btnVolverHub" style="display:none; margin-right:15px; border-right:1px solid #cbd5e1; padding-right:15px;"><button onclick="goBackToHub()" class="msbtn" style="background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Volver al Hub</button></div>
-                    <div class="fitem"><label>Area</label><select class="fsel" id="fArea" multiple onchange="render()"><option value="">Todas</option></select></div>
-          <div class="fitem" id="ftipo-container"><label>Tipo</label><select class="fsel" id="fTipo" multiple onchange="render()"><option value="">Todos</option></select></div>
-          <div class="fitem" id="farea-negocio-container"><label>Area de Negocio</label><select class="fsel" id="fAreaNegocio" multiple onchange="render()"><option value="">Todas</option><option value="Clientes">Clientes</option><option value="Comercial">Comercial</option><option value="Convenios">Convenios</option><option value="Finanzas">Finanzas</option><option value="Logistica">Logistica</option><option value="Operaciones">Operaciones</option><option value="RRHH">RRHH</option><option value="TI">TI</option></select></div>
-          <div class="fitem" id="fclas-container"><label>Clasificación</label><select class="fsel" id="fClas" multiple onchange="render()"><option value="">Todas</option></select></div>
-          <div class="fitem"><label>Estado</label><select class="fsel" id="fEst" multiple onchange="render()"><option value="">Todos</option></select></div>
-          <div class="fitem" id="fetapa-container"><label>Etapas</label><select class="fsel" id="fEtapa" multiple onchange="render()"><option value="">Todas</option></select></div>
-          <div class="fitem" id="fcrit-container"><label>Criticidad</label><select class="fsel" id="fCrit" multiple onchange="render()"><option value="">Todas</option><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select></div>
+                    <div class="fitem"><label>Area</label><select class="fsel" id="fArea" multiple onchange="render()"><option value=\"\">Todas</option></select></div>
+          <div class="fitem" id="ftipo-container"><label>Tipo</label><select class="fsel" id="fTipo" multiple onchange="render()"><option value=\"\">Todos</option></select></div>
+          <div class="fitem" id="farea-negocio-container"><label>Area de Negocio</label><select class="fsel" id="fAreaNegocio" multiple onchange="render()"><option value=\"\">Todas</option><option value="Clientes">Clientes</option><option value="Comercial">Comercial</option><option value="Convenios">Convenios</option><option value="Finanzas">Finanzas</option><option value="J2C">J2C</option><option value="Logistica">Logistica</option><option value="Operaciones">Operaciones</option><option value="RRHH">RRHH</option><option value="TI">TI</option></select></div>
+          <div class="fitem" id="fclas-container"><label>Clasificación</label><select class="fsel" id="fClas" multiple onchange="render()"><option value=\"\">Todas</option></select></div>
+          <div class="fitem"><label>Estado</label><select class="fsel" id="fEst" multiple onchange="render()"><option value=\"\">Todos</option></select></div>
+          <div class="fitem" id="fetapa-container"><label>Etapas</label><select class="fsel" id="fEtapa" multiple onchange="render()"><option value=\"\">Todas</option></select></div>
+          <div class="fitem" id="fcrit-container"><label>Criticidad</label><select class="fsel" id="fCrit" multiple onchange="render()"><option value=\"\">Todas</option><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select></div>
           <div class="fitem" style="display:flex; align-items:flex-end;"><input type="file" id="topFileInput" hidden
               accept=".xlsx, .xls" onchange="handleExcelUpload('Plan Operativo', this)"><button class="msav"
               style="margin-top:0; height: 32px; padding: 0 16px; background:#10b981; gap:6px;"
@@ -3200,13 +3200,58 @@
 
     <!-- Pestaña de Seguimiento Infraestructura -->
     <div class="tab-panel" id="tab3">
+      <!-- HUB DE INFRAESTRUCTURA -->
+      <div id="infra-hub" style="display:flex; flex-direction:column; height:100%; overflow-y:auto;">
+        <!-- TOPBAR DEL HUB -->
+        <div style="background:linear-gradient(135deg,#0a1f8f 0%,#1a3bc4 50%,#0ea5e9 100%); padding:28px 32px; flex-shrink:0;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+            <div>
+              <div style="font-size:11px; font-weight:700; color:rgba(255,255,255,0.6); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">PLAN OPERATIVO 2026</div>
+              <h2 style="font-size:26px; font-weight:900; color:#fff; margin:0; letter-spacing:-0.5px;">Hub de Infraestructura</h2>
+              <div style="font-size:13px; color:rgba(255,255,255,0.75); margin-top:6px;">Selecciona un área para ver el Gantt de seguimiento detallado</div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:12px; padding:10px 18px; text-align:center;">
+                <div style="font-size:22px; font-weight:900; color:#fff;" id="infra-hub-total">0</div>
+                <div style="font-size:11px; color:rgba(255,255,255,0.7); font-weight:600;">REGISTROS TOTALES</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:12px; padding:10px 18px; text-align:center;">
+                <div style="font-size:22px; font-weight:900; color:#4ade80;" id="infra-hub-avr">0%</div>
+                <div style="font-size:11px; color:rgba(255,255,255,0.7); font-weight:600;">AV. GLOBAL</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:12px; padding:10px 18px; text-align:center;">
+                <input type="file" id="infraFileInputHub" hidden accept=".xlsx, .xls" onchange="handleExcelUpload('Seguimiento Infraestructura', this)">
+                <button onclick="document.getElementById('infraFileInputHub').value=null; document.getElementById('infraFileInputHub').click();" style="background:none; border:none; cursor:pointer; color:white; font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-file-excel" style="font-size:18px; color:#4ade80;"></i> Actualizar Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- CARDS GRID (dinámico) -->
+        <div style="padding:32px; flex:1; overflow-y:auto;">
+          <div id="infra-hub-cards" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:24px; margin-bottom:32px;"></div>
+          <!-- GRÁFICOS -->
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
+              <div style="font-size:15px; font-weight:800; color:#1e293b; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;"><i class="fa-solid fa-chart-bar" style="color:#0369a1; margin-right:8px;"></i>Avance por Área</div>
+              <div style="height:250px; position:relative; width:100%;"><canvas id="infraHubBarChart"></canvas></div>
+            </div>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
+              <div style="font-size:15px; font-weight:800; color:#1e293b; margin-bottom:16px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;"><i class="fa-solid fa-chart-pie" style="color:#7c3aed; margin-right:8px;"></i>Distribución por Estado</div>
+              <div style="height:250px; position:relative; width:100%; display:flex; justify-content:center;"><canvas id="infraHubPieChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN HUB -->
       <div class="fbar" style="background:#f1f5f9; padding:10px 15px; border-bottom:1px solid #e2e8f0; display:flex; flex-wrap:wrap; gap:15px; align-items:center;">
         <div style="display:flex; gap:12px; align-items:center;">
-          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">ÁREA</label><select class="fsel" id="fInfraArea" onchange="renderSeguimientoInfra()" style="width:130px; border-radius:6px;"><option value="">Todas</option></select></div>
-          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">RESPONSABLE</label><select class="fsel" id="fInfraResp" onchange="renderSeguimientoInfra()" style="width:130px; border-radius:6px;"><option value="">Todos</option></select></div>
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">ÁREA</label><select class="fsel" id="fInfraArea" onchange="renderSeguimientoInfra()" style="width:130px; border-radius:6px;"><option value=\"\">Todas</option></select></div>
+          <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">RESPONSABLE</label><select class="fsel" id="fInfraResp" onchange="renderSeguimientoInfra()" style="width:130px; border-radius:6px;"><option value=\"\">Todos</option></select></div>
           <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">ESTADO</label>
             <select class="fsel" id="fInfraEst" onchange="renderSeguimientoInfra()" style="width:115px; border-radius:6px;">
-              <option value="">Todos</option>
+              <option value=\"\">Todos</option>
               <option value="Pendiente">⏳ Pendiente</option>
               <option value="En proceso">🔄 En proceso</option>
               <option value="Completado">✅ Completado</option>
@@ -3215,18 +3260,21 @@
           </div>
         </div>
         
+        <div id="btnVolverInfraHub" style="display:none; margin-right:15px; border-right:1px solid #cbd5e1; padding-right:15px;">
+          <button onclick="goBackToInfraHub()" style="background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Volver al Hub</button>
+        </div>
         <div style="flex:1;"></div>
 
         <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
           <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">MES</label>
             <select class="fsel" id="fInfraMes" onchange="renderSeguimientoInfra()" style="width:100px; border-radius:6px;">
-              <option value="">Todos</option>
+              <option value=\"\">Todos</option>
               <option value="ENERO">Enero</option><option value="FEBRERO">Febrero</option><option value="MARZO">Marzo</option><option value="ABRIL">Abril</option><option value="MAYO">Mayo</option><option value="JUNIO">Junio</option><option value="JULIO">Julio</option><option value="AGOSTO">Agosto</option><option value="SEPTIEMBRE">Septiembre</option><option value="OCTUBRE">Octubre</option><option value="NOVIEMBRE">Noviembre</option><option value="DICIEMBRE">Diciembre</option>
             </select>
           </div>
           <div class="fitem"><label style="font-weight:800; font-size:11px; margin-right:5px; color:#475569;">SEMANA</label>
             <select class="fsel" id="fInfraSem" onchange="renderSeguimientoInfra()" style="width:115px; border-radius:6px;">
-              <option value="">Todas</option>
+              <option value=\"\">Todas</option>
               <option value="1">Semana 1</option><option value="2">Semana 2</option><option value="3">Semana 3</option><option value="4">Semana 4</option><option value="5">Semana 5</option><option value="6">Semana 6</option>
             </select>
           </div>
@@ -3747,7 +3795,7 @@
                 fin: findCol(r, ['fin', 'f. fin', 'f_fin', 'termino']) || '',
                 avP: (avP <= 1 && avP > 0) ? Math.round(avP * 100) : Math.round(avP),
                 avR: (avR <= 1 && avR > 0) ? Math.round(avR * 100) : Math.round(avR),
-                est: findCol(r, ['estado', 'estatus']) || 'En Analisis',
+                est: findCol(r, ['estado', 'estatus']) || 'En Análisis',
                 clas: findCol(r, ['clasificacion', 'clasificacion']) || '',
                 etapa: findCol(r, ['etapa', 'etapas']) || '',
                 cons: findCol(r, ['consideraciones', 'consecuencia', 'riesgos']) || '',
@@ -3903,7 +3951,7 @@
                 fin: findCol(r, ['f. fin', 'fin', 'f_fin', 'termino']) || '',
                 avP: (avP <= 1 && avP > 0) ? Math.round(avP * 100) : Math.round(avP),
                 avR: (avR <= 1 && avR > 0) ? Math.round(avR * 100) : Math.round(avR),
-                est: findCol(r, ['estado', 'estatus']) || 'En Analisis',
+                est: findCol(r, ['estado', 'estatus']) || 'En Análisis',
                 cons: findCol(r, ['consecuencia', 'consideraciones', 'riesgos']) || '',
                 obs: findCol(r, ['observaciones / riesgo', 'observaciones', 'observacion']) || ''
               });
@@ -4225,11 +4273,12 @@
       return res;
     }
 
-    function getFilt() {
-      const getMultiVals = (el) => {
+    function getMultiVals(el) {
         if (!el || !el.selectedOptions) return [];
         return Array.from(el.selectedOptions).map(o => o.value).filter(v => v !== "" && v !== "Todas" && v !== "Todos");
-      };
+      }
+
+    function getFilt() {
 
       const ar = getMultiVals(document.getElementById('fArea'));
       const cr = getMultiVals(document.getElementById('fCrit'));
@@ -4468,7 +4517,7 @@
 
         // Crear nuevo item vacio
         item = {
-          id: '', mant: '', desc: '', clas: '', etapa: '', area: '', areaNegocio: '', resp: '', lt: '', est: 'En Analisis', crit: 'BAJA', cons: '', obs: '', avP: 0, avR: 0, ini: '', fin: ''
+          id: '', mant: '', desc: '', clas: '', etapa: '', area: '', areaNegocio: '', resp: '', lt: '', est: 'En Análisis', crit: 'BAJA', cons: '', obs: '', avP: 0, avR: 0, ini: '', fin: ''
         }
 
           ;
@@ -4602,6 +4651,7 @@
                     <option value="Comercial" ${item.areaNegocio === 'Comercial' ? 'selected' : ''}>Comercial</option>
                     <option value="Convenios" ${item.areaNegocio === 'Convenios' ? 'selected' : ''}>Convenios</option>
                     <option value="Finanzas" ${item.areaNegocio === 'Finanzas' ? 'selected' : ''}>Finanzas</option>
+                    <option value="J2C" ${item.areaNegocio === 'J2C' ? 'selected' : ''}>J2C</option>
                     <option value="Logistica" ${item.areaNegocio === 'Logistica' ? 'selected' : ''}>Logistica</option>
                     <option value="Operaciones" ${item.areaNegocio === 'Operaciones' ? 'selected' : ''}>Operaciones</option>
                     <option value="RRHH" ${item.areaNegocio === 'RRHH' ? 'selected' : ''}>RRHH</option>
@@ -4698,17 +4748,17 @@
                     <select id="edEst" style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; width: 100%; outline: none; font-family: inherit;">
                       ${currentCategory === 'Servicios TI' ? `
                       <option value="Completo" ${item.est === 'Completo' ? 'selected' : ''}>Completo</option>
-                      <option value="En analisis" ${(item.est === 'En analisis' || item.est === 'En Analisis') ? 'selected' : ''}>En analisis</option>
+                      <option value="En analisis" ${(item.est === 'En analisis' || item.est === 'En Análisis') ? 'selected' : ''}>En analisis</option>
                       <option value="En Progreso" ${item.est === 'En Progreso' ? 'selected' : ''}>En Progreso</option>
                       <option value="Pendiente" ${item.est === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                       <option value="Stand By" ${item.est === 'Stand By' ? 'selected' : ''}>Stand By</option>
                       ` : `
                       <option value="Completo" ${item.est === 'Completo' ? 'selected' : ''}>Completo</option>
-                      <option value="En Analisis" ${item.est === 'En Analisis' ? 'selected' : ''}>En Analisis</option>
+                      <option value="En Análisis" ${item.est === 'En Análisis' ? 'selected' : ''}>En Análisis</option>
                       <option value="En Progreso" ${item.est === 'En Progreso' ? 'selected' : ''}>En Progreso</option>
                       <option value="Pendiente Aprobacion" ${item.est === 'Pendiente Aprobacion' ? 'selected' : ''}>Pendiente Aprobacion</option>
                       <option value="Stand By" ${item.est === 'Stand By' ? 'selected' : ''}>Stand By</option>
-                      ${!['Completo','En Analisis','En Progreso','Pendiente Aprobacion','Stand By'].includes(item.est) && item.est ? `<option value="${item.est}" selected>${item.est}</option>` : ''}
+                      ${!['Completo','En Análisis','En Progreso','Pendiente Aprobacion','Stand By'].includes(item.est) && item.est ? `<option value="${item.est}" selected>${item.est}</option>` : ''}
                       `}
                     </select>
                   </div>
@@ -5152,9 +5202,15 @@ else if (i === 6) {
         else if (i === 3) {
           document.getElementById('tab3').classList.add('active');
           currentCategory = 'Seguimiento Infraestructura';
-          document.getElementById('dashTitle').innerHTML = '<div>Seguimiento Infraestructura</div><small>Control Operativo Semanal — 2026</small>';
+          document.getElementById('dashTitle').innerHTML = '<div>Hub Infraestructura</div><small>Control Operativo por Área — 2026</small>';
+          // Show hub, hide table
+          document.getElementById('infra-hub').style.display = 'flex';
+          document.querySelector('#tab3 .fbar').style.display = 'none';
+          document.querySelector('#tab3 .rm-outer').style.display = 'none';
+          document.getElementById('ganttLegend').style.display = 'none';
+          document.getElementById('btnVolverInfraHub').style.display = 'none';
           updateDropdowns();
-          renderSeguimientoInfra();
+          setTimeout(renderHubInfra, 300);
         }
 
         updateDropdowns();
@@ -5163,19 +5219,26 @@ else if (i === 6) {
     }
 
     function updateDropdowns() {
+      const selArea = document.getElementById("fArea") ? getMultiVals(document.getElementById("fArea")) : [];
+      const selEst = document.getElementById("fEst") ? getMultiVals(document.getElementById("fEst")) : [];
+      const selClas = document.getElementById("fClas") ? getMultiVals(document.getElementById("fClas")) : [];
+      const selEtapa = document.getElementById("fEtapa") ? getMultiVals(document.getElementById("fEtapa")) : [];
+      const selTipo = document.getElementById("fTipo") ? getMultiVals(document.getElementById("fTipo")) : [];
+      const selAreaNegocio = document.getElementById("fAreaNegocio") ? getMultiVals(document.getElementById("fAreaNegocio")) : [];
+
       const aSet = new Set(),
         eSet = new Set(),
         cSet = new Set(),
         tSet = new Set(),
         etSet = new Set();
-      const currentData = appData.filter(d => d.category === currentCategory || (!d.category && currentCategory === 'Plan Operativo'));
+      const currentData = appData.filter(d => d.category === currentCategory || (!d.category && currentCategory === "Plan Operativo"));
 
       currentData.forEach(d => {
         if (d.area) aSet.add(d.area);
         if (d.est) {
            let e = d.est;
-           if (e.search(/en an.lisis/i) !== -1 || e.toLowerCase() === 'en analisis' || e.toLowerCase() === 'en anlisis') {
-              e = 'En Análisis';
+           if (e.search(/en an.lisis/i) !== -1 || e.toLowerCase() === "en analisis" || e.toLowerCase() === "en anlisis") {
+              e = "En Análisis";
               d.est = e; // Actualiza el objeto en memoria
            }
            eSet.add(e);
@@ -5184,38 +5247,51 @@ else if (i === 6) {
         if (d.tipo) tSet.add(d.tipo);
         if (d.etapa) etSet.add(d.etapa);
       });
-      const aEl = document.getElementById('fArea');
-      aEl.innerHTML = '<option value="">Todas</option>';
+      const aEl = document.getElementById("fArea");
+      aEl.innerHTML = "<option value=\"\">Todas</option>";
 
       [...aSet].sort().forEach(a => aEl.innerHTML += `<option>${a}</option>`);
-      const eEl = document.getElementById('fEst');
-      eEl.innerHTML = '<option value="">Todos</option>';
+      const eEl = document.getElementById("fEst");
+      eEl.innerHTML = "<option value=\"\">Todos</option>";
 
-      [...eSet].sort().forEach(e => eEl.innerHTML += `<option>${e}</option>`);
+      [...eSet].filter(s => !s.includes("�") && !s.includes("\uFFFD") && !(s.includes("lisis") && s !== "En Análisis" && s !== "En Análisis")).sort().forEach(e => eEl.innerHTML += `<option>${e}</option>`);
 
-      const cEl = document.getElementById('fClas');
-      const cCont = document.getElementById('fclas-container');
+      const cEl = document.getElementById("fClas");
+      const cCont = document.getElementById("fclas-container");
       if (cEl) {
-        cEl.innerHTML = '<option value="">Todas</option>';
+        cEl.innerHTML = "<option value=\"\">Todas</option>";
         [...cSet].sort().forEach(c => cEl.innerHTML += `<option>${c}</option>`);
       }
-      if (cCont) cCont.style.display = currentCategory === 'Servicios TI' ? 'flex' : 'none';
+      if (cCont) cCont.style.display = currentCategory === "Servicios TI" ? "flex" : "none";
 
-      const etEl = document.getElementById('fEtapa');
-      const etCont = document.getElementById('fetapa-container');
+      const etEl = document.getElementById("fEtapa");
+      const etCont = document.getElementById("fetapa-container");
       if (etEl) {
-        etEl.innerHTML = '<option value="">Todas</option>';
+        etEl.innerHTML = "<option value=\"\">Todas</option>";
         [...etSet].sort().forEach(et => etEl.innerHTML += `<option>${et}</option>`);
       }
-      if (etCont) etCont.style.display = currentCategory === 'Servicios TI' ? 'flex' : 'none';
+      if (etCont) etCont.style.display = currentCategory === "Servicios TI" ? "flex" : "none";
 
-      const tEl = document.getElementById('fTipo');
-      const tCont = document.getElementById('ftipo-container');
+      const tEl = document.getElementById("fTipo");
+      const tCont = document.getElementById("ftipo-container");
       if (tEl) {
-        tEl.innerHTML = '<option value="">Todos</option>';
+        tEl.innerHTML = "<option value=\"\">Todos</option>";
         [...tSet].sort().forEach(t => tEl.innerHTML += `<option>${t}</option>`);
       }
-      if (tCont) tCont.style.display = currentCategory === 'Servicios TI' ? 'flex' : 'none';
+      if (tCont) tCont.style.display = currentCategory === "Servicios TI" ? "flex" : "none";
+
+      function restoreVals(el, vals) {
+        if(!el || !vals.length) return;
+        for(let i=0; i<el.options.length; i++) {
+          if(vals.includes(el.options[i].value)) el.options[i].selected = true;
+        }
+      }
+      restoreVals(document.getElementById("fArea"), selArea);
+      restoreVals(document.getElementById("fEst"), selEst);
+      restoreVals(document.getElementById("fClas"), selClas);
+      restoreVals(document.getElementById("fEtapa"), selEtapa);
+      restoreVals(document.getElementById("fTipo"), selTipo);
+      restoreVals(document.getElementById("fAreaNegocio"), selAreaNegocio);
 
       // --- Filtros Audit ---
       if (currentCategory === 'Plan de Auditorias') {
@@ -5227,12 +5303,12 @@ else if (i === 6) {
         const iEl = document.getElementById('fAuditInd'), mEl = document.getElementById('fAuditMes');
         if (iEl) {
           const oldV = iEl.value;
-          iEl.innerHTML = '<option value="">Todos</option>';
+          iEl.innerHTML = '<option value=\"\">Todos</option>';
           [...indSet].sort().forEach(i => iEl.innerHTML += `<option ${oldV===i?'selected':''}>${i}</option>`);
         }
         if (mEl) {
           const oldV = mEl.value;
-          mEl.innerHTML = '<option value="">Todos</option>';
+          mEl.innerHTML = '<option value=\"\">Todos</option>';
           [...mesSet].sort().forEach(m => mEl.innerHTML += `<option ${oldV===m?'selected':''}>${m}</option>`);
         }
       }
@@ -5247,12 +5323,12 @@ else if (i === 6) {
         const aEl = document.getElementById('fInfraArea'), rEl = document.getElementById('fInfraResp');
         if (aEl) {
           const oldV = aEl.value;
-          aEl.innerHTML = '<option value="">Todas</option>';
+          aEl.innerHTML = '<option value=\"\">Todas</option>';
           [...aSet].sort().forEach(a => aEl.innerHTML += `<option ${oldV===a?'selected':''}>${a}</option>`);
         }
         if (rEl) {
           const oldV = rEl.value;
-          rEl.innerHTML = '<option value="">Todos</option>';
+          rEl.innerHTML = '<option value=\"\">Todos</option>';
           [...rSet].sort().forEach(r => rEl.innerHTML += `<option ${oldV===r?'selected':''}>${r}</option>`);
         }
       }
@@ -7659,6 +7735,203 @@ else if (i === 6) {
       return days;
     }
 
+    // ===== HUB INFRAESTRUCTURA FUNCTIONS =====
+    const INFRA_AREA_COLORS = [
+      { bg: 'linear-gradient(135deg,#2563eb,#1d4ed8)', accent: '#2563eb', shadow: 'rgba(37,99,235,0.15)', shadowHover: 'rgba(37,99,235,0.28)', kpi1bg: '#eff6ff', kpi1brd: '#bfdbfe', kpi1txt: '#1d4ed8', barColor: '#2563eb', barBg: 'rgba(37,99,235,0.3)' },
+      { bg: 'linear-gradient(135deg,#059669,#047857)', accent: '#059669', shadow: 'rgba(5,150,105,0.15)', shadowHover: 'rgba(5,150,105,0.28)', kpi1bg: '#f0fdf4', kpi1brd: '#bbf7d0', kpi1txt: '#047857', barColor: '#059669', barBg: 'rgba(5,150,105,0.3)' },
+      { bg: 'linear-gradient(135deg,#f59e0b,#d97706)', accent: '#d97706', shadow: 'rgba(245,158,11,0.15)', shadowHover: 'rgba(245,158,11,0.28)', kpi1bg: '#fffbeb', kpi1brd: '#fde68a', kpi1txt: '#b45309', barColor: '#f59e0b', barBg: 'rgba(245,158,11,0.3)' },
+      { bg: 'linear-gradient(135deg,#7c3aed,#6d28d9)', accent: '#7c3aed', shadow: 'rgba(124,58,237,0.15)', shadowHover: 'rgba(124,58,237,0.28)', kpi1bg: '#f5f3ff', kpi1brd: '#ede9fe', kpi1txt: '#7c3aed', barColor: '#7c3aed', barBg: 'rgba(124,58,237,0.3)' },
+      { bg: 'linear-gradient(135deg,#e11d48,#be123c)', accent: '#e11d48', shadow: 'rgba(225,29,72,0.15)', shadowHover: 'rgba(225,29,72,0.28)', kpi1bg: '#fff1f2', kpi1brd: '#fecdd3', kpi1txt: '#be123c', barColor: '#e11d48', barBg: 'rgba(225,29,72,0.3)' },
+      { bg: 'linear-gradient(135deg,#0891b2,#0e7490)', accent: '#0891b2', shadow: 'rgba(8,145,178,0.15)', shadowHover: 'rgba(8,145,178,0.28)', kpi1bg: '#ecfeff', kpi1brd: '#a5f3fc', kpi1txt: '#0e7490', barColor: '#0891b2', barBg: 'rgba(8,145,178,0.3)' },
+      { bg: 'linear-gradient(135deg,#dc6803,#b45309)', accent: '#dc6803', shadow: 'rgba(220,104,3,0.15)', shadowHover: 'rgba(220,104,3,0.28)', kpi1bg: '#fff7ed', kpi1brd: '#fed7aa', kpi1txt: '#9a3412', barColor: '#dc6803', barBg: 'rgba(220,104,3,0.3)' },
+      { bg: 'linear-gradient(135deg,#0f766e,#115e59)', accent: '#0f766e', shadow: 'rgba(15,118,110,0.15)', shadowHover: 'rgba(15,118,110,0.28)', kpi1bg: '#f0fdfa', kpi1brd: '#99f6e4', kpi1txt: '#115e59', barColor: '#0f766e', barBg: 'rgba(15,118,110,0.3)' }
+    ];
+
+    const INFRA_AREA_ICONS = ['fa-network-wired','fa-server','fa-shield-halved','fa-database','fa-cloud','fa-laptop-code','fa-hdd','fa-microchip'];
+
+    function renderHubInfra() {
+      const data = (window.appData || []).filter(d => d.category === 'Seguimiento Infraestructura');
+      
+      // Group by area
+      const areaMap = {};
+      data.forEach(d => {
+        const area = (d.area || 'Sin Área').trim();
+        if (!areaMap[area]) areaMap[area] = [];
+        areaMap[area].push(d);
+      });
+      const INFRA_HUB_EXCLUDED = ['ESTRUCTURA'];
+      const areas = Object.keys(areaMap).sort().filter(a => !INFRA_HUB_EXCLUDED.includes(a.toUpperCase()));
+
+      // Global stats
+      const totalAll = data.length;
+      const totalAvr = totalAll > 0 ? Math.round(data.reduce((s, d) => s + (d.avR || 0), 0) / totalAll) : 0;
+      const el = document.getElementById('infra-hub-total');
+      const elAvr = document.getElementById('infra-hub-avr');
+      if (el) el.textContent = totalAll;
+      if (elAvr) elAvr.textContent = totalAvr + '%';
+
+      // Cards
+      const container = document.getElementById('infra-hub-cards');
+      if (!container) return;
+      container.innerHTML = '';
+
+      areas.forEach((area, idx) => {
+        const items = areaMap[area];
+        const c = INFRA_AREA_COLORS[idx % INFRA_AREA_COLORS.length];
+        const icon = INFRA_AREA_ICONS[idx % INFRA_AREA_ICONS.length];
+        const total = items.length;
+        const completados = items.filter(d => d.est === 'Completado').length;
+        const enProceso = items.filter(d => d.est === 'En proceso').length;
+        const pendientes = items.filter(d => d.est === 'Pendiente').length;
+        const standBy = items.filter(d => d.est === 'Stand By').length;
+        const avgAvr = total > 0 ? Math.round(items.reduce((s, d) => s + (d.avR || 0), 0) / total) : 0;
+        const pctComp = total > 0 ? Math.round((completados / total) * 100) : 0;
+
+        const card = document.createElement('div');
+        card.onclick = () => openInfraArea(area);
+        card.style.cssText = `background:#fff; border-radius:20px; overflow:hidden; box-shadow:0 8px 32px ${c.shadow}; border:1px solid ${c.shadow.replace('0.15','0.2')}; cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; position:relative;`;
+        card.onmouseover = () => { card.style.transform = 'translateY(-6px)'; card.style.boxShadow = `0 20px 48px ${c.shadowHover}`; };
+        card.onmouseout = () => { card.style.transform = 'translateY(0)'; card.style.boxShadow = `0 8px 32px ${c.shadow}`; };
+
+        card.innerHTML = `
+          <div style="background:${c.bg}; padding:24px 28px 20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="width:56px; height:56px; background:rgba(255,255,255,0.2); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:24px; color:white;">
+                <i class="fa-solid ${icon}"></i>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:13px; color:rgba(255,255,255,0.85); font-weight:700;">ÁREA DE INFRAESTRUCTURA</div>
+              </div>
+            </div>
+            <div style="margin-top:16px; font-size:20px; font-weight:800; color:#fff; letter-spacing:0.5px;">${area.toUpperCase()}</div>
+            <div style="font-size:12px; color:rgba(255,255,255,0.75); margin-top:4px;">${total} registros de seguimiento</div>
+          </div>
+          <div style="padding:20px 28px 8px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+            <div style="text-align:center; padding:14px 8px; background:${c.kpi1bg}; border-radius:14px; border:1px solid ${c.kpi1brd};">
+              <div style="font-size:11px; color:${c.kpi1txt}; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px;">Total</div>
+              <div style="font-size:32px; font-weight:900; color:${c.accent}; line-height:1;">${total}</div>
+              <div style="font-size:10px; color:#94a3b8; font-weight:600; margin-top:3px; text-transform:uppercase;">registros</div>
+            </div>
+            <div style="text-align:center; padding:14px 8px; background:#f0fdf4; border-radius:14px; border:1px solid #bbf7d0;">
+              <div style="font-size:11px; color:#047857; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px;">Completados</div>
+              <div style="font-size:32px; font-weight:900; color:#10b981; line-height:1;">${completados}</div>
+              <div style="font-size:10px; color:#94a3b8; font-weight:600; margin-top:3px; text-transform:uppercase;">${pctComp}% ok</div>
+            </div>
+            <div style="text-align:center; padding:14px 8px; background:#eff6ff; border-radius:14px; border:1px solid #bfdbfe;">
+              <div style="font-size:11px; color:#1d4ed8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px;">Avance</div>
+              <div style="font-size:32px; font-weight:900; color:#2563eb; line-height:1;">${avgAvr}%</div>
+              <div style="font-size:10px; color:#94a3b8; font-weight:600; margin-top:3px; text-transform:uppercase;">promedio</div>
+            </div>
+          </div>
+          <div style="padding:12px 28px 16px;">
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#64748b; margin-bottom:6px;">
+              <span>Progreso General</span><span>${avgAvr}%</span>
+            </div>
+            <div style="background:#f1f5f9; border-radius:6px; height:10px; overflow:hidden; position:relative;">
+              <div style="position:absolute; top:0; left:0; height:100%; background:${c.barBg}; border-radius:6px; width:100%;"></div>
+              <div style="position:absolute; top:0; left:0; height:100%; background:${c.barColor}; border-radius:6px; width:${avgAvr}%; transition:width 0.8s ease;"></div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; font-size:10px; font-weight:600;">
+              <span style="background:#d1fae5; color:#065f46; padding:2px 8px; border-radius:12px;">✅ ${completados} Comp.</span>
+              <span style="background:#dbeafe; color:#1e40af; padding:2px 8px; border-radius:12px;">🔄 ${enProceso} En Proc.</span>
+              <span style="background:#fef3c7; color:#92400e; padding:2px 8px; border-radius:12px;">⏳ ${pendientes} Pend.</span>
+              ${standBy > 0 ? `<span style="background:#f3f4f6; color:#374151; padding:2px 8px; border-radius:12px;">⏸ ${standBy} StBy</span>` : ''}
+            </div>
+          </div>
+          <div style="padding:0 28px 20px; text-align:right;">
+            <span style="font-size:12px; font-weight:700; color:${c.accent};">Ver Seguimiento ${area} <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Bar Chart
+      const barCtx = document.getElementById('infraHubBarChart');
+      if (barCtx) {
+        if (Chart.getChart(barCtx)) Chart.getChart(barCtx).destroy();
+        new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: areas,
+            datasets: [{
+              label: 'Avance Promedio %',
+              data: areas.map(a => {
+                const items = areaMap[a];
+                return items.length > 0 ? Math.round(items.reduce((s,d) => s+(d.avR||0),0)/items.length) : 0;
+              }),
+              backgroundColor: areas.map((a,i) => INFRA_AREA_COLORS[i % INFRA_AREA_COLORS.length].barColor),
+              borderRadius: 6
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, max: 100 } }
+          }
+        });
+      }
+
+      // Pie Chart (by status)
+      const pieCtx = document.getElementById('infraHubPieChart');
+      if (pieCtx) {
+        if (Chart.getChart(pieCtx)) Chart.getChart(pieCtx).destroy();
+        const comp = data.filter(d=>d.est==='Completado').length;
+        const enp = data.filter(d=>d.est==='En proceso').length;
+        const pend = data.filter(d=>d.est==='Pendiente').length;
+        const sb = data.filter(d=>d.est==='Stand By').length;
+        new Chart(pieCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Completado','En proceso','Pendiente','Stand By'],
+            datasets: [{ data: [comp, enp, pend, sb], backgroundColor: ['#10b981','#3b82f6','#f59e0b','#6b7280'], borderWidth: 2 }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: { legend: { position:'bottom', labels: { font:{ size:11, weight:'bold' } } } }
+          }
+        });
+      }
+    }
+
+    function openInfraArea(area) {
+      // Switch from hub to table/gantt
+      document.getElementById('infra-hub').style.display = 'none';
+      document.querySelector('#tab3 .fbar').style.display = 'flex';
+      document.querySelector('#tab3 .rm-outer').style.display = 'block';
+      document.getElementById('ganttLegend').style.display = 'block';
+      document.getElementById('btnVolverInfraHub').style.display = 'inline-block';
+      // Filter by area
+      const sel = document.getElementById('fInfraArea');
+      if (sel) {
+        for (let opt of sel.options) {
+          opt.selected = (opt.value === area || opt.text === area);
+        }
+        if (!Array.from(sel.options).some(o => o.selected && o.value !== '')) {
+          // Area not found, add it dynamically
+          const opt = document.createElement('option');
+          opt.value = area; opt.text = area; opt.selected = true;
+          sel.appendChild(opt);
+        }
+      }
+      document.getElementById('dashTitle').innerHTML = '<div>Seguimiento: ' + area + '</div><small>Gantt de Control Operativo — 2026</small>';
+      renderSeguimientoInfra();
+    }
+
+    function goBackToInfraHub() {
+      document.getElementById('infra-hub').style.display = 'flex';
+      document.querySelector('#tab3 .fbar').style.display = 'none';
+      document.querySelector('#tab3 .rm-outer').style.display = 'none';
+      document.getElementById('ganttLegend').style.display = 'none';
+      document.getElementById('btnVolverInfraHub').style.display = 'none';
+      document.getElementById('dashTitle').innerHTML = '<div>Hub Infraestructura</div><small>Control Operativo por Área — 2026</small>';
+      // Reset area filter
+      const sel = document.getElementById('fInfraArea');
+      if (sel) Array.from(sel.options).forEach(o => o.selected = false);
+      setTimeout(renderHubInfra, 100);
+    }
+    // ===== END HUB INFRAESTRUCTURA FUNCTIONS =====
+
     function renderSeguimientoInfra() {
       const aFilt = document.getElementById('fInfraArea').value;
       const rFilt = document.getElementById('fInfraResp').value;
@@ -8742,9 +9015,15 @@ function renderHubTI() {
         }
     }
   } catch(e) {
-    console.error("Error en renderHubTI:", e);
+console.error("Error en renderHubTI:", e);
   }
 }
 </script>
 </body>
 </html>
+
+
+
+
+
+
